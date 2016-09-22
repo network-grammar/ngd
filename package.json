@@ -1,0 +1,23 @@
+{
+  "name": "ngd",
+  "version": "1.0.0",
+  "description": "Network Grammar Demonstrator",
+  "main": "Main.js",
+  "scripts": {
+    "test": "tsc; node ./Main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/network-grammar/ngd.git"
+  },
+  "author": "John J. Camilleri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/network-grammar/ngd/issues"
+  },
+  "homepage": "https://github.com/network-grammar/ngd#readme",
+  "dependencies": {
+    "async": "^2.0.1",
+    "monk": "^3.1.2"
+  }
+}
