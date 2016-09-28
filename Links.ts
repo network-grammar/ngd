@@ -14,8 +14,8 @@ class Link {
 }
 
 export enum LinkStatus {
-  InUse,
-  Deleted
+  InUse, // W
+  Deleted // X
 }
   
 /**
@@ -31,22 +31,26 @@ export class Word extends Link {
   m():MNode { return <MNode>this.sic }
 }
 
+export enum RuleParent {
+  Quo,
+  Sic
+}
 
 /**
  * A rule of combination: a word as C1 followed in a sentence by another as C2 may be joined with R
  * C/R/C
  */
 export class Rule extends Link {
-  parentIsQuo: boolean // true = quo is parent; false = sic is parent
+  parent: RuleParent
   constructor(c1: CNode, r: RNode, c2: CNode) {
     super(c1, r, c2)
     this.parentQuo()
   }
   parentQuo(): void {
-    this.parentIsQuo = true
+    this.parent = RuleParent.Quo
   }
   parentSic(): void {
-    this.parentIsQuo = false
+    this.parent = RuleParent.Sic
   }
   dependentQuo(): void { this.parentSic() }
   dependentSic(): void { this.parentQuo() }

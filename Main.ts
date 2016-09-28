@@ -25,13 +25,14 @@ import * as DB from "./DataLayer"
 
 // console.log(john_P)
 
-Parser.parse("John loves Lucy", (err, data) => {
+Parser.parse("John kiss Lucy", (err, data) => {
   if (err) {
-    console.log("Error!")
-    console.log(err)
+    console.error("Error!")
+    console.error(err)
   } else {
     console.log(data)
   }
+  DB.close()
 })
 
 // DB.findPNode("Lucy", (err, doc) => {
