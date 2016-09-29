@@ -4,22 +4,23 @@ import * as DB from "./DataLayerSync"
 
 export module Parser {
 
+  enum Flag {
+    DoesNotFit = 0,
+    NotYetParticipated = 1,
+    OnlyParticipatedAsParent = 2,
+    ActivationUsed = 3
+  }
+  
+  class StackItem {
+    cnode: CNode
+    pos: number // index in token list
+    status: LinkStatus
+    flag: Flag
+  }
+
   export function parse(input: string, callback: (err, data?) => any): void {
 
     let tokens: Array<string> = input.split(' ')
-
-    enum Flag {
-      DoesNotFit = 0,
-      NotYetParticipated = 1,
-      OnlyParticipatedAsParent = 2,
-      ActivationUsed = 3
-    }
-    class StackItem {
-      cnode: CNode
-      pos: number // index in token list
-      status: LinkStatus
-      flag: Flag
-    }
 
     let list: Array<Delivery> = []
     let stack: Array<StackItem> = []
@@ -60,41 +61,119 @@ export module Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           let left: StackItem = stack[lx]
           if (left.flag != Flag.NotYetParticipated) continue
-          
-          let rules: Rule[] = DB.findRules(left.cnode, right.cnode)
-          if (!rules || rules.length === 0) {
-            return callback("Cannot find any Rules for CNodes: " + left.cnode.key + " / " + right.cnode.key)
-          }
-          for (let rule of rules) {
-            if (rule.parent === RuleParent.Quo && left.flag === Flag.ActivationUsed) {
-              continue
-            }
-          }
-            
-          console.log("Found pair: " + tokens[left.pos] + " / " + tokens[right.pos])
+          console.log("Found pair: " + tokens[left.pos] + "___" + tokens[right.pos])
+          pairOfCs(lx, rx, stack)
         }
       }
 
-      // Pair again where left flag = 3
-      // for (let rx = stack.length-1; rx >= 0; rx--) {
-      //   let right = stack[rx]
-      //   if (right.flag != Flag.NotYetParticipated) continue
-      //   for (let lx = rx-1; lx >= 0; lx--) {
-      //     let left = stack[lx]
-      //     if (left.flag != Flag.ActivationUsed) continue
-      // 
-      //     // TODO
-      //     console.log("Found pair: " + tokens[left.pos] + " / " + tokens[right.pos])
-      //   }
-      // }
+      // Pair again where left flag == 3
+      for (let rx = stack.length-1; rx >= 0; rx--) {
+        let right = stack[rx]
+        if (right.flag != Flag.NotYetParticipated) continue
+        for (let lx = rx-1; lx >= 0; lx--) {
+          let left = stack[lx]
+          if (left.flag != Flag.ActivationUsed) continue
+          console.log("Found pair: " + tokens[left.pos] + " / " + tokens[right.pos])
+          pairOfCs(lx, rx, stack)
+        }
+      }
 
     }
+    
+    // At sentence end...
 
     // We're done
     return callback(null, stack)
 
     // console.log(stack)
     // console.log(JSON.stringify(stack, null, 2))
+  }
+
+  /**
+   * Run on each pair of C's
+   */
+  function pairOfCs (lx: number, rx: number, stack: Array<StackItem>): void {
+    let left = stack[lx]
+    let right = stack[rx]
+    
+    let rules: Rule[] = DB.findRules(left.cnode, right.cnode)
+    if (!rules || rules.length === 0) return
+    let last_used_rule: Rule = null
+    for (let rule of rules) {
+      // r_status != W or Y
+      if (rule.status !== LinkStatus.InUse || rule.status !== LinkStatus.ProvisionalNotUsedYet) {
+        continue
+      }
+      // r_parent == Q and s_fleft == 3
+      if (rule.parent === RuleParent.Quo && left.flag === Flag.ActivationUsed) {
+        continue
+      }
+      
+      last_used_rule = rule
+      
+      // Discard any other C's for these words
+      for (let x = stack.length-1; x >= 0; x--) {
+        if (x === lx || x === rx) continue
+        if (stack[x].flag === Flag.NotYetParticipated &&
+            (stack[x].pos === left.pos || stack[x].pos === right.pos)) {
+          stack[x].flag = Flag.DoesNotFit
+        }
+      }
+      
+      // if r_status == Y, r_status = Z
+      if (rule.status === LinkStatus.ProvisionalNotUsedYet) {
+        rule.status = LinkStatus.ProvisionalJunction
+        // TODO: write to database
+      }
+      
+      // if s_sright == Y, s_sright = Z
+      if (right.status === LinkStatus.ProvisionalNotUsedYet) {
+        right.status = LinkStatus.ProvisionalJunction
+      }
+      // if s_sleft == Y, s_left = Z
+      if (left.status === LinkStatus.ProvisionalNotUsedYet) {
+        left.status = LinkStatus.ProvisionalJunction
+      }
+      
+      if (rule.rel === null) { // TODO RNULL?
+        switchCs(rule, lx, rx, stack)
+      } else {
+        // if r_parent == S, s_fright = 2 and s_fleft = 3 
+        if (rule.parent === RuleParent.Sic) {
+          right.flag = Flag.OnlyParticipatedAsParent // 2
+          left.flag  = Flag.ActivationUsed // 3
+        }
+        // if r_parent == Q, s_fright = 3 and unless s_fleft already == 3, s_fleft = 2
+        if (rule.parent === RuleParent.Quo) {
+          right.flag = Flag.ActivationUsed // 3
+          if (left.flag !== Flag.ActivationUsed) left.flag = Flag.OnlyParticipatedAsParent // 2
+        }
+        
+        displayProposition()
+      }
+    } // for rule of rules
+    switchCs(last_used_rule, lx, rx, stack)
+  }
+
+  /**
+   *
+   */
+  function switchCs (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
+    let cswitch1: CSwitch = DB.findCSwitch(rule.c1(), rule.c2()) // r_quonode + r_sicnode + ***
+    if (cswitch1.status === LinkStatus.InUse) { // == W
+      stack[lx].cnode = cswitch1.c3() // s_node = c_sicnode
+    }
+    let cswitch2: CSwitch = DB.findCSwitch(rule.c2(), rule.c1()) // r_sicnode + r_quonode + ***
+    if (cswitch2.status === LinkStatus.InUse) { // == W
+      stack[rx].cnode = cswitch2.c3() // s_node = c_sicnode
+    }
+  }
+
+  /**
+   *
+   */
+  function displayProposition () {
+    // TODO
   }
 
 }

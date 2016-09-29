@@ -15,7 +15,9 @@ class Link {
 
 export enum LinkStatus {
   InUse, // W
-  Deleted // X
+  Deleted, // X
+  ProvisionalNotUsedYet, // Y
+  ProvisionalJunction // Z
 }
   
 /**
@@ -32,8 +34,8 @@ export class Word extends Link {
 }
 
 export enum RuleParent {
-  Quo,
-  Sic
+  Quo, // Q
+  Sic  // S
 }
 
 /**
@@ -44,16 +46,11 @@ export class Rule extends Link {
   parent: RuleParent
   constructor(c1: CNode, r: RNode, c2: CNode) {
     super(c1, r, c2)
-    this.parentQuo()
-  }
-  parentQuo(): void {
     this.parent = RuleParent.Quo
   }
-  parentSic(): void {
-    this.parent = RuleParent.Sic
-  }
-  dependentQuo(): void { this.parentSic() }
-  dependentSic(): void { this.parentQuo() }
+  c1():CNode { return <CNode>this.quo }
+  r() :RNode { return <RNode>this.rel }
+  c2():CNode { return <CNode>this.sic }
 }
 
 /**
@@ -64,6 +61,9 @@ export class CSwitch extends Link {
   constructor(c1: CNode, c2: CNode, c3: CNode) {
     super(c1, c2, c3)
   }
+  c1():CNode { return <CNode>this.quo }
+  c2():CNode { return <CNode>this.rel }
+  c3():CNode { return <CNode>this.sic }
 }
 
 /**

@@ -33,6 +33,20 @@ let links = [
     "status": 1
   },
   {
+    "type": "PCM", // Word
+    "quo": { "key": "kiss" },
+    "rel": { "key": null },
+    "sic": { "key": null },
+    "status": 1
+  },
+  {
+    "type": "PCM", // Word
+    "quo": { "key": "Lucy" },
+    "rel": { "key": null },
+    "sic": { "key": null },
+    "status": 1
+  },
+  {
     "type": "CRC", // Rule
     "quo": { "key": null },
     "rel": { "key": null },
@@ -53,7 +67,7 @@ function mkPNode(data): PNode {
 }
 
 /**
- * Make a PNode object from raw data
+ * Make a Word object from raw data
  */
 function mkWord(data): Word {
   if (data.type !== "PCM") {
@@ -64,7 +78,7 @@ function mkWord(data): Word {
 }
 
 /**
- * Make a PNode object from raw data
+ * Make a Rule object from raw data
  */
 function mkRule(data): Rule {
   if (data.type !== "CRC") {
@@ -73,6 +87,19 @@ function mkRule(data): Rule {
   }
   return new Rule(data.quo, data.rel, data.sic) // TODO
 }
+
+/**
+ * Make a CSwitch object from raw data
+ */
+function mkCSwitch(data): CSwitch {
+  if (data.type !== "CCC") {
+    console.error("Cannot convert to CSwitch: " + JSON.stringify(data))
+    return null
+  }
+  return new CSwitch(data.quo, data.rel, data.sic) // TODO
+}
+
+// --------------------------------------------------------------------------
 
 /**
  * Find a PNode by its label.
@@ -111,6 +138,18 @@ export function findRules(left: CNode, right: CNode): Rule[] {
     }
   }
   return rules
+}
+
+/**
+ * Find a (single) C-Switch (C/C/C) for 2 given CNodes
+ */
+export function findCSwitch(c1: CNode, c2: CNode): CSwitch {
+  for (let link of links) {
+    if (link.type === "CCC" && link.quo.key === c1.key && link.sic.key === c2.key) {
+      return mkCSwitch(link)
+    }
+  }
+  return null
 }
 
 export function close(): void {
