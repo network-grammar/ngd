@@ -4,7 +4,7 @@
   "description": "Network Grammar Demonstrator",
   "main": "Main.js",
   "scripts": {
-    "test": "tsc; node ./Main"
+    "test": "tsc"
   },
   "repository": {
     "type": "git",
