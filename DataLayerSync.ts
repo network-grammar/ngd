@@ -22,35 +22,63 @@ let nodes = [
     "type" : "P",
     "key" : "kiss",
     "label" : "kiss"
-  }  
+  },
+  {
+    "type" : "M",
+    "key" : "JOHN"
+  },
+  {
+    "type" : "M",
+    "key" : "KISS"
+  },
+  {
+    "type" : "M",
+    "key" : "LUCY"
+  },
+  {
+    "type" : "C",
+    "key" : "C1"
+  },
+  {
+    "type" : "C",
+    "key" : "C2"
+  },
+  {
+    "type" : "R",
+    "key" : "R1"
+  },
+  {
+    "type" : "R",
+    "key" : "R2"
+  },
 ]
 let links = [
   {
     "type": "PCM", // Word
     "quo": { "key": "John" },
-    "rel": { "key": null },
-    "sic": { "key": null },
+    "rel": { "key": "C1" },
+    "sic": { "key": "JOHN" },
     "status": 1
   },
   {
     "type": "PCM", // Word
     "quo": { "key": "kiss" },
-    "rel": { "key": null },
-    "sic": { "key": null },
+    "rel": { "key": "C2" },
+    "sic": { "key": "KISS" },
     "status": 1
   },
   {
     "type": "PCM", // Word
     "quo": { "key": "Lucy" },
-    "rel": { "key": null },
-    "sic": { "key": null },
+    "rel": { "key": "C1" },
+    "sic": { "key": "LUCY" },
     "status": 1
   },
   {
     "type": "CRC", // Rule
-    "quo": { "key": null },
-    "rel": { "key": null },
-    "sic": { "key": null },
+    "quo": { "key": "C1" },
+    "rel": { "key": "R1" },
+    "sic": { "key": "C1" },
     "status": 1
   }
 ]
@@ -107,7 +135,7 @@ function mkCSwitch(data): CSwitch {
  */
 export function findPNode(label: string): PNode {
   for (let node of nodes) {
-    if (node.label === label) {
+    if (node.type === "P" && node['label'] === label) {
       return mkPNode(node)
     }
   }
