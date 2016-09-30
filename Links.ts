@@ -19,7 +19,7 @@ export enum LinkStatus {
   ProvisionalNotUsedYet, // Y
   ProvisionalJunction // Z
 }
-  
+
 /**
  * A word in the NG sense: P used as C means M
  * P/C/M

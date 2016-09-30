@@ -5,12 +5,12 @@ import * as DB from "./DataLayerSync"
 export module Parser {
 
   enum Flag {
-    DoesNotFit = 0,
-    NotYetParticipated = 1,
-    OnlyParticipatedAsParent = 2,
-    ActivationUsed = 3
+    DoesNotFit, // 0,
+    NotYetParticipated, // 1
+    OnlyParticipatedAsParent, // 2
+    ActivationUsed // 3
   }
-  
+
   class StackItem {
     cnode: CNode
     pos: number // index in token list
@@ -43,7 +43,7 @@ export module Parser {
         return callback("Cannot find any Words for PNode: " + pnode.key)
       }
       // words = [new Word(pnode, new CNode("dummy_C"), new MNode(token))] // TODO
-      
+
       // 3. For each, add to stack
       for (let word of words) {
         let item = new StackItem()
@@ -79,7 +79,7 @@ export module Parser {
       }
 
     }
-    
+
     // At sentence end...
 
     // We're done
@@ -95,22 +95,22 @@ export module Parser {
   function pairOfCs (lx: number, rx: number, stack: Array<StackItem>): void {
     let left = stack[lx]
     let right = stack[rx]
-    
+
     let rules: Rule[] = DB.findRules(left.cnode, right.cnode)
     if (!rules || rules.length === 0) return
     let last_used_rule: Rule = null
     for (let rule of rules) {
       // r_status != W or Y
-      if (rule.status !== LinkStatus.InUse || rule.status !== LinkStatus.ProvisionalNotUsedYet) {
+      if (rule.status.valueOf() !== LinkStatus.InUse || rule.status !== LinkStatus.ProvisionalNotUsedYet) {
         continue
       }
       // r_parent == Q and s_fleft == 3
       if (rule.parent === RuleParent.Quo && left.flag === Flag.ActivationUsed) {
         continue
       }
-      
+
       last_used_rule = rule
-      
+
       // Discard any other C's for these words
       for (let x = stack.length-1; x >= 0; x--) {
         if (x === lx || x === rx) continue
@@ -119,13 +119,13 @@ export module Parser {
           stack[x].flag = Flag.DoesNotFit
         }
       }
-      
+
       // if r_status == Y, r_status = Z
       if (rule.status === LinkStatus.ProvisionalNotUsedYet) {
         rule.status = LinkStatus.ProvisionalJunction
         // TODO: write to database
       }
-      
+
       // if s_sright == Y, s_sright = Z
       if (right.status === LinkStatus.ProvisionalNotUsedYet) {
         right.status = LinkStatus.ProvisionalJunction
@@ -134,11 +134,11 @@ export module Parser {
       if (left.status === LinkStatus.ProvisionalNotUsedYet) {
         left.status = LinkStatus.ProvisionalJunction
       }
-      
+
       if (rule.rel === null) { // TODO RNULL?
         switchCs(rule, lx, rx, stack)
       } else {
-        // if r_parent == S, s_fright = 2 and s_fleft = 3 
+        // if r_parent == S, s_fright = 2 and s_fleft = 3
         if (rule.parent === RuleParent.Sic) {
           right.flag = Flag.OnlyParticipatedAsParent // 2
           left.flag  = Flag.ActivationUsed // 3
@@ -148,7 +148,7 @@ export module Parser {
           right.flag = Flag.ActivationUsed // 3
           if (left.flag !== Flag.ActivationUsed) left.flag = Flag.OnlyParticipatedAsParent // 2
         }
-        
+
         displayProposition()
       }
     } // for rule of rules
