@@ -151,11 +151,13 @@ export module Parser {
         displayProposition()
       }
     } // for rule of rules
-    switchCs(last_used_rule, lx, rx, stack)
+    if (last_used_rule !== null) {
+      switchCs(last_used_rule, lx, rx, stack)
+    }
   }
 
   /**
-   *
+   * Switch-Cs function
    */
   function switchCs (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
     let cswitch1: CSwitch = DB.findCSwitch(rule.c1(), rule.c2()) // r_quonode + r_sicnode + ***
@@ -169,7 +171,7 @@ export module Parser {
   }
 
   /**
-   *
+   * Display proposition function
    */
   function displayProposition () {
     // TODO
