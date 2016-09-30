@@ -19,8 +19,8 @@ enum NodeType {
  */
 export class PNode extends Node {
   label: string
-  constructor(label: string) {
-    super(NodeType.P, label)
+  constructor(key: string, label: string) {
+    super(NodeType.P, key)
     this.label = label
   }
   // constructor(key: string, label: string) {

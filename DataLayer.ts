@@ -25,7 +25,7 @@ export function findPNode(label: string, callback: Callback<PNode>): void {
     else if (doc == null)
       callback("Cannot find PNode: " + label)
     else
-      callback(null, new PNode(doc.label))
+      callback(null, new PNode(doc.key, doc.label))
   })
 }
 

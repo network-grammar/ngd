@@ -2,7 +2,7 @@ import { PNode, MNode, CNode, RNode } from "./Nodes"
 import { Word, Rule, CSwitch, Delivery } from "./Links"
 import { Parser } from "./Parser"
 
-Parser.parse("John kiss Lucy", (err, data) => {
+Parser.parse("John kissed Lucy", (err, data) => {
   if (err) {
     console.error("Error!")
     console.error(err)

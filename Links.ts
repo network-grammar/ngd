@@ -11,6 +11,9 @@ class Link {
     this.sic = s
     this.status = LinkStatus.InUse
   }
+  setStatusStr(status: string): void {
+    this.status = LinkStatus[status]
+  }
 }
 
 export enum LinkStatus {

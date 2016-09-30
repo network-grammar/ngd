@@ -42,7 +42,6 @@ export module Parser {
       if (!words || words.length === 0) {
         return callback("Cannot find any Words for PNode: " + pnode.key)
       }
-      // words = [new Word(pnode, new CNode("dummy_C"), new MNode(token))] // TODO
 
       // 3. For each, add to stack
       for (let word of words) {

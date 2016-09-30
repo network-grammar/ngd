@@ -3,26 +3,26 @@
   "quo": { "key": "John" },
   "rel": { "key": "C1" },
   "sic": { "key": "JOHN" },
-  "status": 1
+  "status": "InUse"
 }
 {
   "type": "PCM",
   "quo": { "key": "kiss" },
   "rel": { "key": "C2" },
   "sic": { "key": "KISS" },
-  "status": 1
+  "status": "InUse"
 }
 {
   "type": "PCM",
   "quo": { "key": "Lucy" },
   "rel": { "key": "C1" },
   "sic": { "key": "LUCY" },
-  "status": 1
+  "status": "InUse"
 }
 {
   "type": "CRC",
   "quo": { "key": "C1" },
   "rel": { "key": "R1" },
   "sic": { "key": "C1" },
-  "status": 1
+  "status": "InUse"
 }
