@@ -6,82 +6,17 @@
 import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
 import {Word, Rule, CSwitch, Delivery} from "./Links"
 
-// TODO: read from data directory
-let nodes = [
-  {
-    "type" : "P",
-    "key" : "John",
-    "label" : "John"
-  },
-  {
-    "type" : "P",
-    "key" : "Lucy",
-    "label" : "Lucy"
-  },
-  {
-    "type" : "P",
-    "key" : "kiss",
-    "label" : "kiss"
-  },
-  {
-    "type" : "M",
-    "key" : "JOHN"
-  },
-  {
-    "type" : "M",
-    "key" : "KISS"
-  },
-  {
-    "type" : "M",
-    "key" : "LUCY"
-  },
-  {
-    "type" : "C",
-    "key" : "C1"
-  },
-  {
-    "type" : "C",
-    "key" : "C2"
-  },
-  {
-    "type" : "R",
-    "key" : "R1"
-  },
-  {
-    "type" : "R",
-    "key" : "R2"
-  },
-]
-let links = [
-  {
-    "type": "PCM", // Word
-    "quo": { "key": "John" },
-    "rel": { "key": "C1" },
-    "sic": { "key": "JOHN" },
-    "status": 1
-  },
-  {
-    "type": "PCM", // Word
-    "quo": { "key": "kiss" },
-    "rel": { "key": "C2" },
-    "sic": { "key": "KISS" },
-    "status": 1
-  },
-  {
-    "type": "PCM", // Word
-    "quo": { "key": "Lucy" },
-    "rel": { "key": "C1" },
-    "sic": { "key": "LUCY" },
-    "status": 1
-  },
-  {
-    "type": "CRC", // Rule
-    "quo": { "key": "C1" },
-    "rel": { "key": "R1" },
-    "sic": { "key": "C1" },
-    "status": 1
-  }
-]
+/**
+ * Read data from JSON files
+ */
+import fs = require("fs")
+let nodes = processJSONFile("data/nodes.json")
+let links = processJSONFile("data/links.json")
+function processJSONFile(file) {
+  let data = fs.readFileSync(file, "utf-8")
+  data = "[" + data.replace(/}\n{/g, "},\n{") + "]"
+  return JSON.parse(data)
+}
 
 /**
  * Make a PNode object from raw data

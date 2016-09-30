@@ -1,23 +1,43 @@
-/* 1 */
 {
-    "_id" : ObjectId("57e38e435fc9bebd6d002dc0"),
-    "type" : "P",
-    "key" : "John",
-    "label" : "John"
+  "type" : "P",
+  "key" : "John",
+  "label" : "John"
 }
-
-/* 2 */
 {
-    "_id" : ObjectId("57e38e435fc9bebd6d002dc1"),
-    "type" : "P",
-    "key" : "Lucy",
-    "label" : "Lucy"
+  "type" : "P",
+  "key" : "Lucy",
+  "label" : "Lucy"
 }
-
-/* 3 */
 {
-    "_id" : ObjectId("57e38e435fc9bebd6d002dc2"),
-    "type" : "P",
-    "key" : "kiss",
-    "label" : "kiss"
+  "type" : "P",
+  "key" : "kiss",
+  "label" : "kiss"
+}
+{
+  "type" : "M",
+  "key" : "JOHN"
+}
+{
+  "type" : "M",
+  "key" : "KISS"
+}
+{
+  "type" : "M",
+  "key" : "LUCY"
+}
+{
+  "type" : "C",
+  "key" : "C1"
+}
+{
+  "type" : "C",
+  "key" : "C2"
+}
+{
+  "type" : "R",
+  "key" : "R1"
+}
+{
+  "type" : "R",
+  "key" : "R2"
 }

@@ -2,5 +2,8 @@
   "dependencies": {
     "async": "registry:npm/async#2.0.1+20160815105832",
     "monk": "registry:npm/monk#3.1.2+20160830164330"
+  },
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20160928143418"
   }
 }
