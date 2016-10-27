@@ -58,37 +58,37 @@
 {
   "type": "M",
   "key": "M03",
-  "label": "SIMPLE PAST",
+  "label": "SIMPLE PAST"
 }
 {
   "type": "M",
   "key": "M04",
-  "label": "FEMALE PERSON",
+  "label": "FEMALE PERSON"
 }
 {
   "type": "M",
   "key": "M11",
-  "label": "EMPEROR",
+  "label": "EMPEROR"
 }
 {
   "type": "M",
   "key": "M12",
-  "label": "GIVE",
+  "label": "GIVE"
 }
 {
   "type": "M",
   "key": "M13",
-  "label": "EMPEROR'S WIFE",
+  "label": "EMPEROR'S WIFE"
 }
 {
   "type": "M",
   "key": "M14",
-  "label": "SLAVE",
+  "label": "SLAVE"
 }
 {
   "type": "M",
   "key": "M15",
-  "label": "DIRECTION",
+  "label": "DIRECTION"
 }
 
 

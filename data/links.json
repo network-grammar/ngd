@@ -106,7 +106,7 @@
 {
   "type": "CRC",
   "quo": { "key": "C11" },
-  "rel": { "key": "RNULL" },
+  "rel": { "key": null },
   "sic": { "key": "C01" },
   "status": "InUse",
   "parent": "Q"
@@ -130,7 +130,7 @@
 {
   "type": "CRC",
   "quo": { "key": "C12" },
-  "rel": { "key": "RNULL" },
+  "rel": { "key": null },
   "sic": { "key": "C10" },
   "status": "InUse",
   "parent": "Q"

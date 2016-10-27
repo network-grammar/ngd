@@ -13,7 +13,7 @@ export module Parser {
 
   class StackItem {
     cnode: CNode
-    pos: number // index in token list
+    pos: number // index in token list 's_seq'
     status: LinkStatus
     flag: Flag
   }
@@ -25,7 +25,8 @@ export module Parser {
     let list: Array<Delivery> = []
     let stack: Array<StackItem> = []
 
-    console.log("I'm parsing: " + input)
+    console.log("INPUT: " + input)
+    console.log('--------------------')
 
     // for (let i=0; i<tokens.length; i++) {
     for (let i in tokens) {
@@ -60,20 +61,23 @@ export module Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           let left: StackItem = stack[lx]
           if (left.flag != Flag.NotYetParticipated) continue
-          console.log("Found pair: " + tokens[left.pos] + "___" + tokens[right.pos])
+          console.log("PAIR: " + tokens[left.pos] + "___" + tokens[right.pos])
           pairOfCs(lx, rx, stack)
+          console.log('--------------------')
         }
       }
 
       // Pair again where left flag == 3
+      // TODO: never gets here...
       for (let rx = stack.length-1; rx >= 0; rx--) {
         let right = stack[rx]
         if (right.flag != Flag.NotYetParticipated) continue
         for (let lx = rx-1; lx >= 0; lx--) {
           let left = stack[lx]
           if (left.flag != Flag.ActivationUsed) continue
-          console.log("Found pair: " + tokens[left.pos] + " / " + tokens[right.pos])
+          console.log("PAIR: " + tokens[left.pos] + " / " + tokens[right.pos])
           pairOfCs(lx, rx, stack)
+          console.log('--------------------')
         }
       }
 
@@ -98,7 +102,19 @@ export module Parser {
     let rules: Rule[] = DB.findRules(left.cnode, right.cnode)
     if (!rules || rules.length === 0) return
     let last_used_rule: Rule = null
+
+    console.log("STACK")
+    console.log(stack)
+    console.log("RULES")
+    console.log(rules)
+
     for (let rule of rules) {
+
+      // TODO: temporary workaround until clarified initial value of statuses
+      if (!rule.status) {
+        rule.status = LinkStatus.InUse
+      }
+
       // r_status != W or Y
       if (rule.status.valueOf() !== LinkStatus.InUse || rule.status !== LinkStatus.ProvisionalNotUsedYet) {
         continue
@@ -134,7 +150,7 @@ export module Parser {
         left.status = LinkStatus.ProvisionalJunction
       }
 
-      if (rule.rel === null) { // TODO RNULL?
+      if (rule.rel === null) { // was RNULL
         switchCs(rule, lx, rx, stack)
       } else {
         // if r_parent == S, s_fright = 2 and s_fleft = 3
@@ -148,7 +164,7 @@ export module Parser {
           if (left.flag !== Flag.ActivationUsed) left.flag = Flag.OnlyParticipatedAsParent // 2
         }
 
-        displayProposition()
+        displayProposition(rule, lx, rx, stack)
       }
     } // for rule of rules
     if (last_used_rule !== null) {
@@ -173,8 +189,13 @@ export module Parser {
   /**
    * Display proposition function
    */
-  function displayProposition () {
-    // TODO
+  function displayProposition (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
+    let parent: CNode = rule.getParent()
+    let dependent: CNode = rule.getParent()
+
+    // How to get words from here? We need to put them in StackItem?
+    // But then the logic in switchCs needs to change
+
   }
 
 }

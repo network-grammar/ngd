@@ -1,11 +1,13 @@
 import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
 
-class Link {
+export class Link {
+  type : LinkType
   quo: Node
   rel: Node
   sic: Node
   status: LinkStatus
-  constructor(q: Node, r: Node, s: Node) {
+  constructor(t: LinkType, q: Node, r: Node, s: Node) {
+    this.type = t
     this.quo = q
     this.rel = r
     this.sic = s
@@ -14,6 +16,13 @@ class Link {
   setStatusStr(status: string): void {
     this.status = LinkStatus[status]
   }
+}
+
+export enum LinkType {
+  Word, // PCM
+  Rule, // CRC
+  CSwitch, // CCC
+  Delivery  // MRM
 }
 
 export enum LinkStatus {
@@ -29,7 +38,7 @@ export enum LinkStatus {
  */
 export class Word extends Link {
   constructor(p: PNode, c: CNode, m: MNode) {
-    super(p, c, m)
+    super(LinkType.Word, p, c, m)
   }
   p():PNode { return <PNode>this.quo }
   c():CNode { return <CNode>this.rel }
@@ -48,8 +57,16 @@ export enum RuleParent {
 export class Rule extends Link {
   parent: RuleParent
   constructor(c1: CNode, r: RNode, c2: CNode) {
-    super(c1, r, c2)
+    super(LinkType.Rule, c1, r, c2)
     this.parent = RuleParent.Quo
+  }
+  parentQuo(): void { this.parent = RuleParent.Quo }
+  parentSic(): void { this.parent = RuleParent.Sic }
+  getParent(): CNode {
+    return (this.parent === RuleParent.Quo) ? this.quo : this.sic
+  }
+  getDependent(): CNode {
+    return (this.parent === RuleParent.Quo) ? this.sic : this.quo
   }
   c1():CNode { return <CNode>this.quo }
   r() :RNode { return <RNode>this.rel }
@@ -62,7 +79,7 @@ export class Rule extends Link {
  */
 export class CSwitch extends Link {
   constructor(c1: CNode, c2: CNode, c3: CNode) {
-    super(c1, c2, c3)
+    super(LinkType.CSwitch, c1, c2, c3)
   }
   c1():CNode { return <CNode>this.quo }
   c2():CNode { return <CNode>this.rel }
@@ -75,6 +92,6 @@ export class CSwitch extends Link {
  */
 export class Delivery extends Link {
   constructor(m1: MNode, r: RNode, m2: MNode) {
-    super(m1, r, m2)
+    super(LinkType.Delivery, m1, r, m2)
   }
 }

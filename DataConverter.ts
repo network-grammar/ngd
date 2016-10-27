@@ -3,7 +3,34 @@
  */
 
 import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Word, Rule, CSwitch, Delivery} from "./Links"
+import {Link, Word, Rule, CSwitch, Delivery} from "./Links"
+
+// ---------------------------------------------------------------------------
+// -- Generic
+
+export function mkNode(data): Node {
+  switch (data.type) {
+    case 'P': return mkPNode(data)
+    case 'C': return mkCNode(data)
+    case 'M': return mkMNode(data)
+    case 'R': return mkRNode(data)
+    default:
+      console.error("Cannot convert item: " + JSON.stringify(data))
+      return null
+  }
+}
+
+export function mkLink(data, nodeDict): Link {
+  switch (data.type) {
+    case 'PCM': return mkWord(data, nodeDict)
+    case 'CRC': return mkRule(data, nodeDict)
+    case 'CCC': return mkCSwitch(data, nodeDict)
+    case 'MRM': return mkDelivery(data, nodeDict)
+    default:
+      console.error("Cannot convert item: " + JSON.stringify(data))
+      return null
+  }
+}
 
 // ---------------------------------------------------------------------------
 // -- Nodes
@@ -16,8 +43,7 @@ export function mkPNode(data): PNode {
     console.error("Cannot convert to PNode: " + JSON.stringify(data))
     return null
   }
-  let label: string = data.label ? data.label : data.key
-  return new PNode(data.key, label)
+  return new PNode(data.key, data.label)
 }
 
 /**
@@ -28,7 +54,7 @@ export function mkCNode(data): CNode {
     console.error("Cannot convert to CNode: " + JSON.stringify(data))
     return null
   }
-  return new CNode(data.key)
+  return new CNode(data.key, data.label)
 }
 
 /**
@@ -39,7 +65,7 @@ export function mkMNode(data): MNode {
     console.error("Cannot convert to MNode: " + JSON.stringify(data))
     return null
   }
-  return new MNode(data.key)
+  return new MNode(data.key, data.label)
 }
 
 /**
@@ -50,7 +76,7 @@ export function mkRNode(data): RNode {
     console.error("Cannot convert to RNode: " + JSON.stringify(data))
     return null
   }
-  return new RNode(data.key)
+  return new RNode(data.key, data.label)
 }
 
 // ---------------------------------------------------------------------------
@@ -59,12 +85,12 @@ export function mkRNode(data): RNode {
 /**
  * Make a Word object from raw data
  */
-export function mkWord(data): Word {
+export function mkWord(data, nodeDict): Word {
   if (data.type && data.type !== "PCM") {
     console.error("Cannot convert to Word: " + JSON.stringify(data))
     return null
   }
-  let o: Word = new Word(mkPNode(data.quo), mkCNode(data.rel), mkMNode(data.sic))
+  let o: Word = new Word(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
   o.setStatusStr(data.status)
   return o
 }
@@ -72,25 +98,42 @@ export function mkWord(data): Word {
 /**
  * Make a Rule object from raw data
  */
-export function mkRule(data): Rule {
+export function mkRule(data, nodeDict): Rule {
   if (data.type && data.type !== "CRC") {
     console.error("Cannot convert to Rule: " + JSON.stringify(data))
     return null
   }
-  let o:Rule = new Rule(mkCNode(data.quo), mkRNode(data.rel), mkCNode(data.sic))
+  let o:Rule = new Rule(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
   o.setStatusStr(data.status)
+  switch (data.parent) {
+    case 'Q': o.parentQuo(); break
+    case 'S': o.parentSic(); break
+  }
   return o
 }
 
 /**
  * Make a CSwitch object from raw data
  */
-export function mkCSwitch(data): CSwitch {
+export function mkCSwitch(data, nodeDict): CSwitch {
   if (data.type && data.type !== "CCC") {
     console.error("Cannot convert to CSwitch: " + JSON.stringify(data))
     return null
   }
-  let o:CSwitch = new CSwitch(mkCNode(data.quo), mkCNode(data.rel), mkCNode(data.sic))
+  let o:CSwitch = new CSwitch(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
+  o.setStatusStr(data.status)
+  return o
+}
+
+/**
+ * Make a Delivery object from raw data
+ */
+export function mkDelivery(data, nodeDict): Delivery {
+  if (data.type && data.type !== "MRM") {
+    console.error("Cannot convert to Delivery: " + JSON.stringify(data))
+    return null
+  }
+  let o:Delivery = new Delivery(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
   o.setStatusStr(data.status)
   return o
 }
