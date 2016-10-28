@@ -46,9 +46,10 @@ html
                 h3 Input
                 form
                   .form-group
-                    label(for='inputPhrase') Input phrase
-                    input#inputPhrase.form-control(type='text', placeholder='John kiss ed Lucy')
-                  button.btn.btn-primary(type="submit") Parse
+                    input#inputPhrase.form-control(type='text', value='John kiss ed Lucy', placeholder='Input phrase')
+                  button#btnParse.btn.btn-primary(type="submit") Parse
+                h3 Log
+                pre#log
                 h3 Output
                 pre#output
 
@@ -60,13 +61,21 @@ html
 
     //- RequireJS
     script(type='text/javascript').
-      require(['DataLayerSync'], function(DB) {
-        console.log(DB.nodes)
+      require(['Parser'], function(p) {
+        $('#btnParse').click(() => {
+          var input = $('#inputPhrase').val()
+          p.Parser.parse(input, (err, data) => {
+            if (err) {
+              $('#log').text('')
+              $('#out').text(err)
+            } else {
+              $('#log').text(data.log)
+              $('#out').text(data.output)
+            }
+          })
+          return false
+        })
       })
-      //- require(['lib/text.min!data/nodes.json','lib/text.min!data/links.json'], function(nodes,links) {
-      //-   console.log(nodes)
-      //-   console.log(links)
-      //- })
       
     //- Visualisation
     script(type='text/javascript').

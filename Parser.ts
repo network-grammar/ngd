@@ -28,6 +28,7 @@ export module Parser {
     left: StackItem // pointer to left item (or null)
     right: StackItem // pointer to right item (or null)
     rule: Rule // active rule
+    l: string[] // log, instead of dumping to console
     constructor(input: string) {
       this.tokens = input.split(' ')
       this.list = []
@@ -35,6 +36,7 @@ export module Parser {
       this.left = null
       this.right = null
       this.rule = null
+      this.l = []
     }
     setLeft(lx: number): void {
       this.lx = lx
@@ -44,14 +46,25 @@ export module Parser {
       this.rx = rx
       this.right = this.stack[rx]
     }
+
+    log(s: any) {
+      if (typeof s === 'string') {
+        this.l.push(s)
+      } else {
+        this.l.push(JSON.stringify(s, null, 2))
+      }
+    }
+    getLog(): string {
+      return this.l.join("\n")
+    }
   }
 
   export function parse(input: string, callback: (err, data?) => any): void {
 
     let st = new ParseState(input)
 
-    console.log("INPUT: " + input)
-    console.log('--------------------')
+    st.log("INPUT: " + input)
+    st.log('--------------------')
 
     // for (let i=0; i<tokens.length; i++) {
     for (let i in st.tokens) {
@@ -87,9 +100,9 @@ export module Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
           if (st.left.flag != Flag.NotYetParticipated) continue
-          console.log("PAIR: " + st.left.token + "___" + st.right.token)
+          st.log("PAIR: " + st.left.token + "___" + st.right.token)
           pairOfCs(st)
-          console.log('--------------------')
+          st.log('--------------------')
         }
       }
 
@@ -101,9 +114,9 @@ export module Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
           if (st.left.flag != Flag.ActivationUsed) continue
-          console.log("PAIR: " + st.left.token + " / " + st.right.token)
+          st.log("PAIR: " + st.left.token + " / " + st.right.token)
           pairOfCs(st)
-          console.log('--------------------')
+          st.log('--------------------')
         }
       }
 
@@ -112,10 +125,10 @@ export module Parser {
     // TODO At sentence end
 
     // We're done
-    return callback(null, st)
-
-    // console.log(stack)
-    // console.log(JSON.stringify(stack, null, 2))
+    return callback(null, {
+      output: st.list,
+      log: st.getLog()
+    })
   }
 
   /**
@@ -128,10 +141,10 @@ export module Parser {
     if (!rules || rules.length === 0) return
     let last_used_rule: Rule = null
 
-    console.log("STACK")
-    console.log(st.stack)
-    console.log("RULES")
-    console.log(rules)
+    st.log("STACK")
+    st.log(st.stack)
+    st.log("RULES")
+    st.log(rules)
 
     for (let rule of rules) {
 
@@ -215,7 +228,7 @@ export module Parser {
    */
   // function displayProposition (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
   function displayProposition (st: ParseState): void {
-    console.log('> in displayProposition')
+    st.log('> in displayProposition')
 
     // The parent and dependent words are identified in the stack.
     // The higher entry in the stack gives the parent word if the successful RULE record has r_parent = ‘S’, or dependent if r_parent = ‘Q’.
@@ -241,7 +254,7 @@ export module Parser {
 
     let r: RNode = st.rule.r()
 
-    console.log('Found MRM: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
+    st.log('Found MRM: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
     st.list.push()
   }
 
