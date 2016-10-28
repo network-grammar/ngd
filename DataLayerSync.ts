@@ -10,14 +10,9 @@ import * as DC from "./DataConverter"
 /**
  * Read data from JSON files into JSON lists
  */
-import fs = require("fs")
-let nodesJSON = processJSONFile("data/nodes.json")
-let linksJSON = processJSONFile("data/links.json")
-function processJSONFile(file) {
-  let data = fs.readFileSync(file, "utf-8")
-  data = "[" + data.replace(/}\n+{/g, "},\n{") + "]"
-  return JSON.parse(data)
-}
+
+let nodesJSON = require("./data/nodes.json")
+let linksJSON = require("./data/links.json")
 
 /**
  * Convert JSON lists into lists of actual JS objects
@@ -43,19 +38,6 @@ export let links: Link[] = linksJSON.map((l) => {
 export function findPNode(label: string): PNode {
   for (let node of nodes) {
     if (node.type === NodeType.P && node.label === label) {
-      return node
-    }
-  }
-  return null
-}
-
-/**
- * Find a RNode by ...
- * This is something like a lexicon lookup.
- */
-export function findRNode(label: string): RNode {
-  for (let node of nodes) {
-    if (node.type === NodeType.R && node.label === label) {
       return node
     }
   }

@@ -1,183 +1,185 @@
-{
-  "type": "PCM",
-  "quo": { "key": "P01" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "M01" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P02" },
-  "rel": { "key": "C02" },
-  "sic": { "key": "M02" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P03" },
-  "rel": { "key": "C03" },
-  "sic": { "key": "M03" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P04" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "M04" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P11" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "M11" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P12" },
-  "rel": { "key": "C11" },
-  "sic": { "key": "M12" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P13" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "M13" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P14" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "M14" },
-  "status": null
-}
-{
-  "type": "PCM",
-  "quo": { "key": "P15" },
-  "rel": { "key": "C10" },
-  "sic": { "key": "M15" },
-  "status": null
-}
+[
+  {
+    "type": "PCM",
+    "quo": { "key": "P01" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "M01" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P02" },
+    "rel": { "key": "C02" },
+    "sic": { "key": "M02" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P03" },
+    "rel": { "key": "C03" },
+    "sic": { "key": "M03" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P04" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "M04" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P11" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "M11" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P12" },
+    "rel": { "key": "C11" },
+    "sic": { "key": "M12" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P13" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "M13" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P14" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "M14" },
+    "status": "InUse"
+  },
+  {
+    "type": "PCM",
+    "quo": { "key": "P15" },
+    "rel": { "key": "C10" },
+    "sic": { "key": "M15" },
+    "status": "InUse"
+  },
 
 
-{
-  "type": "CRC",
-  "quo": { "key": "C01" },
-  "rel": { "key": "R01" },
-  "sic": { "key": "C02" },
-  "status": "InUse",
-  "parent": "S"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C02" },
-  "rel": { "key": "R02" },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C02" },
-  "rel": { "key": "R03" },
-  "sic": { "key": "C03" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": null },
-  "rel": { "key": "R03" },
-  "sic": { "key": "C11" },
-  "status": "InUse",
-  "parent": "S"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C01" },
-  "rel": { "key": "R01" },
-  "sic": { "key": "C11" },
-  "status": "InUse",
-  "parent": "S"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C11" },
-  "rel": { "key": null },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C12" },
-  "rel": { "key": "R11" },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C13" },
-  "rel": { "key": "R12" },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C12" },
-  "rel": { "key": null },
-  "sic": { "key": "C10" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C14" },
-  "rel": { "key": "R12" },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
-{
-  "type": "CRC",
-  "quo": { "key": "C14" },
-  "rel": { "key": "R11" },
-  "sic": { "key": "C01" },
-  "status": "InUse",
-  "parent": "Q"
-}
+  {
+    "type": "CRC",
+    "quo": { "key": "C01" },
+    "rel": { "key": "R01" },
+    "sic": { "key": "C02" },
+    "status": "InUse",
+    "parent": "S"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C02" },
+    "rel": { "key": "R02" },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C02" },
+    "rel": { "key": "R03" },
+    "sic": { "key": "C03" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": null },
+    "rel": { "key": "R03" },
+    "sic": { "key": "C11" },
+    "status": "InUse",
+    "parent": "S"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C01" },
+    "rel": { "key": "R01" },
+    "sic": { "key": "C11" },
+    "status": "InUse",
+    "parent": "S"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C11" },
+    "rel": { "key": null },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C12" },
+    "rel": { "key": "R11" },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C13" },
+    "rel": { "key": "R12" },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C12" },
+    "rel": { "key": null },
+    "sic": { "key": "C10" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C14" },
+    "rel": { "key": "R12" },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
+  {
+    "type": "CRC",
+    "quo": { "key": "C14" },
+    "rel": { "key": "R11" },
+    "sic": { "key": "C01" },
+    "status": "InUse",
+    "parent": "Q"
+  },
 
 
-{
-  "type": "CCC",
-  "quo": { "key": "C11" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "C12" },
-  "status": null
-}
-{
-  "type": "CCC",
-  "quo": { "key": "C12" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "C13" },
-  "status": null
-}
-{
-  "type": "CCC",
-  "quo": { "key": "C12" },
-  "rel": { "key": "C10" },
-  "sic": { "key": "C14" },
-  "status": null
-}
-{
-  "type": "CCC",
-  "quo": { "key": "C14" },
-  "rel": { "key": "C01" },
-  "sic": { "key": "C13" },
-  "status": null
-}
+  {
+    "type": "CCC",
+    "quo": { "key": "C11" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "C12" },
+    "status": "InUse"
+  },
+  {
+    "type": "CCC",
+    "quo": { "key": "C12" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "C13" },
+    "status": "InUse"
+  },
+  {
+    "type": "CCC",
+    "quo": { "key": "C12" },
+    "rel": { "key": "C10" },
+    "sic": { "key": "C14" },
+    "status": "InUse"
+  },
+  {
+    "type": "CCC",
+    "quo": { "key": "C14" },
+    "rel": { "key": "C01" },
+    "sic": { "key": "C13" },
+    "status": "InUse"
+  }
+]

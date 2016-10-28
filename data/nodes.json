@@ -1,161 +1,163 @@
-{
-  "type": "P",
-  "key": "P01",
-  "label": "John"
-}
-{
-  "type": "P",
-  "key": "P02",
-  "label": "kiss"
-}
-{
-  "type": "P",
-  "key": "P03",
-  "label": "ed"
-}
-{
-  "type": "P",
-  "key": "P04",
-  "label": "Lucy"
-}
-{
-  "type": "P",
-  "key": "P11",
-  "label": "Nero"
-}
-{
-  "type": "P",
-  "key": "P12",
-  "label": "gave"
-}
-{
-  "type": "P",
-  "key": "P13",
-  "label": "Poppaea"
-}
-{
-  "type": "P",
-  "key": "P14",
-  "label": "Olivia"
-}
-{
-  "type": "P",
-  "key": "P15",
-  "label": "to"
-}
+[
+  {
+    "type": "P",
+    "key": "P01",
+    "label": "John"
+  },
+  {
+    "type": "P",
+    "key": "P02",
+    "label": "kiss"
+  },
+  {
+    "type": "P",
+    "key": "P03",
+    "label": "ed"
+  },
+  {
+    "type": "P",
+    "key": "P04",
+    "label": "Lucy"
+  },
+  {
+    "type": "P",
+    "key": "P11",
+    "label": "Nero"
+  },
+  {
+    "type": "P",
+    "key": "P12",
+    "label": "gave"
+  },
+  {
+    "type": "P",
+    "key": "P13",
+    "label": "Poppaea"
+  },
+  {
+    "type": "P",
+    "key": "P14",
+    "label": "Olivia"
+  },
+  {
+    "type": "P",
+    "key": "P15",
+    "label": "to"
+  },
 
 
-{
-  "type": "M",
-  "key": "M1",
-  "label": "MALE PERSON"
-}
-{
-  "type": "M",
-  "key": "M2",
-  "label": "KISS, NOT MUTUAL"
-}
-{
-  "type": "M",
-  "key": "M03",
-  "label": "SIMPLE PAST"
-}
-{
-  "type": "M",
-  "key": "M04",
-  "label": "FEMALE PERSON"
-}
-{
-  "type": "M",
-  "key": "M11",
-  "label": "EMPEROR"
-}
-{
-  "type": "M",
-  "key": "M12",
-  "label": "GIVE"
-}
-{
-  "type": "M",
-  "key": "M13",
-  "label": "EMPEROR'S WIFE"
-}
-{
-  "type": "M",
-  "key": "M14",
-  "label": "SLAVE"
-}
-{
-  "type": "M",
-  "key": "M15",
-  "label": "DIRECTION"
-}
+  {
+    "type": "M",
+    "key": "M1",
+    "label": "MALE PERSON"
+  },
+  {
+    "type": "M",
+    "key": "M2",
+    "label": "KISS, NOT MUTUAL"
+  },
+  {
+    "type": "M",
+    "key": "M03",
+    "label": "SIMPLE PAST"
+  },
+  {
+    "type": "M",
+    "key": "M04",
+    "label": "FEMALE PERSON"
+  },
+  {
+    "type": "M",
+    "key": "M11",
+    "label": "EMPEROR"
+  },
+  {
+    "type": "M",
+    "key": "M12",
+    "label": "GIVE"
+  },
+  {
+    "type": "M",
+    "key": "M13",
+    "label": "EMPEROR'S WIFE"
+  },
+  {
+    "type": "M",
+    "key": "M14",
+    "label": "SLAVE"
+  },
+  {
+    "type": "M",
+    "key": "M15",
+    "label": "DIRECTION"
+  },
 
 
-{
-  "type": "C",
-  "key": "C01",
-  "label": "PROPER NOUN"
-}
-{
-  "type": "C",
-  "key": "C02",
-  "label": "MONOTRANSITIVE VERB"
-}
-{
-  "type": "C",
-  "key": "C03",
-  "label": "VERB INFLECTION"
-}
-{
-  "type": "C",
-  "key": "C10",
-  "label": "PREPOSITION to"
-}
-{
-  "type": "C",
-  "key": "C11",
-  "label": "ALTERNATING DITRANSITIVE VERB"
-}
-{
-  "type": "C",
-  "key": "C12",
-  "label": "A.D.V. WITH FOLLOWING NOUN PHRASE"
-}
-{
-  "type": "C",
-  "key": "C13",
-  "label": "A.D.V. WITH SECOND FOLLOWING NOUN PHRASE"
-}
-{
-  "type": "C",
-  "key": "C14",
-  "label": "A.D.V. WITH FOLLOWING to"
-}
+  {
+    "type": "C",
+    "key": "C01",
+    "label": "PROPER NOUN"
+  },
+  {
+    "type": "C",
+    "key": "C02",
+    "label": "MONOTRANSITIVE VERB"
+  },
+  {
+    "type": "C",
+    "key": "C03",
+    "label": "VERB INFLECTION"
+  },
+  {
+    "type": "C",
+    "key": "C10",
+    "label": "PREPOSITION to"
+  },
+  {
+    "type": "C",
+    "key": "C11",
+    "label": "ALTERNATING DITRANSITIVE VERB"
+  },
+  {
+    "type": "C",
+    "key": "C12",
+    "label": "A.D.V. WITH FOLLOWING NOUN PHRASE"
+  },
+  {
+    "type": "C",
+    "key": "C13",
+    "label": "A.D.V. WITH SECOND FOLLOWING NOUN PHRASE"
+  },
+  {
+    "type": "C",
+    "key": "C14",
+    "label": "A.D.V. WITH FOLLOWING to"
+  },
 
 
-{
-  "type": "R",
-  "key": "R01",
-  "label": "AGENT"
-}
-{
-  "type": "R",
-  "key": "R02",
-  "label": "PATIENT"
-}
-{
-  "type": "R",
-  "key": "R03",
-  "label": "TENSE, SIMPLE PAST"
-}
-{
-  "type": "R",
-  "key": "R11",
-  "label": "THEME"
-}
-{
-  "type": "R",
-  "key": "R12",
-  "label": "GOAL"
-}
+  {
+    "type": "R",
+    "key": "R01",
+    "label": "AGENT"
+  },
+  {
+    "type": "R",
+    "key": "R02",
+    "label": "PATIENT"
+  },
+  {
+    "type": "R",
+    "key": "R03",
+    "label": "TENSE, SIMPLE PAST"
+  },
+  {
+    "type": "R",
+    "key": "R11",
+    "label": "THEME"
+  },
+  {
+    "type": "R",
+    "key": "R12",
+    "label": "GOAL"
+  }
+]
