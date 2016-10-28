@@ -50,16 +50,52 @@ export function findPNode(label: string): PNode {
 }
 
 /**
- * Find Words (P/C/M) for a given PNode
+ * Find a RNode by ...
+ * This is something like a lexicon lookup.
  */
-export function findWords(pnode: PNode): Word[] {
+export function findRNode(label: string): RNode {
+  for (let node of nodes) {
+    if (node.type === NodeType.R && node.label === label) {
+      return node
+    }
+  }
+  return null
+}
+
+/**
+ * Find Words (P/C/M) for a given PNode and optional CNode
+ */
+export function findWords(pnode: PNode, cnode?: CNode): Word[] {
   let words: Word[] = []
   for (let link of links) {
     if (link.type === LinkType.Word && link.quo === pnode) {
-      words.push(link as Word)
+      if (!cnode || link.rel === cnode) { // also filter by CNode if supplied
+        words.push(link as Word)
+      }
     }
   }
   return words
+}
+
+/**
+ * Find a Word (P/C/M) for a given PNode and CNode
+ */
+export function findWord(pnode: PNode, cnode: CNode): Word {
+  let words: Word[] = []
+  for (let link of links) {
+    if (link.type === LinkType.Word && link.quo === pnode && link.rel === cnode) {
+      words.push(link as Word)
+    }
+  }
+  if (words.length === 0) {
+    console.error('No words found for: ' + pnode + ' / ' + cnode)
+    return null
+  } else if (words.length > 0) {
+    console.error('More than one word found for: ' + pnode + ' / ' + cnode)
+    return words[0]
+  } else {
+    return words[0]
+  }
 }
 
 /**

@@ -60,8 +60,10 @@ export class Rule extends Link {
     super(LinkType.Rule, c1, r, c2)
     this.parent = RuleParent.Quo
   }
-  parentQuo(): void { this.parent = RuleParent.Quo }
-  parentSic(): void { this.parent = RuleParent.Sic }
+  setParentQuo(): void { this.parent = RuleParent.Quo }
+  setParentSic(): void { this.parent = RuleParent.Sic }
+  isParentQuo(): boolean { return this.parent === RuleParent.Quo }
+  isParentSic(): boolean { return this.parent === RuleParent.Sic }
   getParent(): CNode {
     return (this.parent === RuleParent.Quo) ? this.quo : this.sic
   }

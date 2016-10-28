@@ -14,6 +14,7 @@ export module Parser {
   class StackItem {
     cnode: CNode
     pos: number // index in token list 's_seq'
+    token: string // my own addition, why not?
     status: LinkStatus
     flag: Flag
   }
@@ -190,12 +191,37 @@ export module Parser {
    * Display proposition function
    */
   function displayProposition (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
-    let parent: CNode = rule.getParent()
-    let dependent: CNode = rule.getParent()
+    console.log('> in displayProposition')
 
-    // How to get words from here? We need to put them in StackItem?
-    // But then the logic in switchCs needs to change
+    let left = stack[lx] // lower
+    let right = stack[rx] // higher
 
+    // The parent and dependent words are identified in the stack.
+    // The higher entry in the stack gives the parent word if the successful RULE record has r_parent = ‘S’, or dependent if r_parent = ‘Q’.
+    // The lower entry gives the other word in the junction.
+    let par: StackItem
+    let dep: StackItem
+    if (rule.isParentSic()) {
+      par = right
+      dep = left
+    } else {
+      par = left
+      dep = right
+    }
+
+    let parP: PNode = DB.findPNode(par.token)
+    let depP: PNode = DB.findPNode(dep.token)
+
+    let parW: Word = DB.findWord(parP, par.cnode)
+    let depW: Word = DB.findWord(depP, dep.cnode)
+
+    let parM: MNode = parW.m() // first n_label in MRM
+    let depM: MNode = depW.m() // third n_label in MRM
+
+    let r: RNode = rule.r()
+
+    console.log('Found MRM: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
+    // TODO surely we want to do something better with construted MRM?
   }
 
 }
