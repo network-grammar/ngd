@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>NGD: Network Grammar Demonstator</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"><script src="https://code.jquery.com/jquery-3.1.1.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script><script src="ngd-parser.js"></script><style type="text/css">#mynetwork {
+width: 100%;
+height: 500px;
+}</style></head><body><div class="container"><div><h1>NGD  <small>Network Grammar Demonstrator</small></h1><p class="text-muted"><em>John J. Camilleri</em></p><ul class="nav nav-tabs" role="tablist"><li class="active" role="presentation"><a href="#parse" aria-controls="parse" role="tab" data-toggle="tab">Parse</a></li><li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a></li></ul><div class="tab-content"><div class="tab-pane active" id="parse" role="tabpanel"><div class="row"><div class="col-sm-6"><div id="mynetwork"></div></div><div class="col-sm-6"><h3>Input</h3><form><div class="form-group"><label for="inputPhrase">Input phrase</label><input class="form-control" id="inputPhrase" type="text" placeholder="John kiss ed Lucy"></div><button class="btn btn-primary" type="submit">Parse</button></form><h3>Output</h3><pre id="output"></pre></div></div></div><div class="tab-pane" id="data" role="tabpanel"><h3>Nodes</h3><p>...</p><h3>Links</h3><p>...</p></div></div></div></div><script type="text/javascript">require(['DataLayerSync'], function(DB) {
+  console.log(DB.nodes)
+})
+//- require(['lib/text.min!data/nodes.json','lib/text.min!data/links.json'], function(nodes,links) {
+//-   console.log(nodes)
+//-   console.log(links)
+//- })
+</script><script type="text/javascript">var nodes = [
+  {id: 'P1', label: 'P1'},
+  {id: 'P2', label: 'P2'},
+  {id: 'C1', label: 'C1'},
+  {id: 'C2', label: 'C2'},
+  {id: 'M1', label: 'M1'},
+  {id: 'M2', label: 'M2'},
+  {id: 'R', label: 'R'}
+]
+var edges = [
+  {from: 'P1', to: 'M1', arrows:'to'},
+  {from: 'P2', to: 'M2', arrows:'to'},
+  {from: 'C1', to: 'C2', arrows:'to'},
+  {from: 'P1', to: 'C1'},
+  {from: 'C1', to: 'M1'},
+  {from: 'P2', to: 'C2'},
+  {from: 'C2', to: 'M2'},
+  {from: 'R', to: 'M1'},
+  {from: 'R', to: 'M2'},
+  {from: 'R', to: 'C1'},
+  {from: 'R', to: 'C2'},
+  {from: 'M1', to: 'M2'}
+]
+// create a network
+var container = document.getElementById('mynetwork')
+var data = {
+  nodes: nodes,
+  edges: edges
+}
+var options = {
+}
+var network = new vis.Network(container, data, options)</script></body></html>

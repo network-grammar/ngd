@@ -10,6 +10,7 @@ import * as DC from "./DataConverter"
 /**
  * Read data from JSON files into JSON lists
  */
+declare var require: any; // to allow compilation to AMD (RequireJS)
 
 let nodesJSON = require("./data/nodes.json")
 let linksJSON = require("./data/links.json")

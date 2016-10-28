@@ -1,11 +1,17 @@
 .PHONY: clean
 
-default:
-	@echo "Nothing to make"
+default: *.ts
+	tsc
+
+%.js: %.ts
+	tsc $<
 
 clean:
 	# Is this dangerous?
 	rm -f *.js
 
-%.js: %.ts
-	tsc $<
+index.html: index.pug
+	pug $<
+
+ngd-parser.js: *.ts
+	tsc --outFile ngd-parser.js --module amd
