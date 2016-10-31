@@ -68,89 +68,78 @@
     "type": "CRC",
     "quo": { "key": "C01" },
     "rel": { "key": "R01" },
-    "sic": { "key": "C02" },
-    "status": "InUse",
-    "parent": "S"
+    "sic": { "key": "C02", "parent": true },
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C02" },
+    "quo": { "key": "C02", "parent": true },
     "rel": { "key": "R02" },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C02" },
+    "quo": { "key": "C02", "parent": true },
     "rel": { "key": "R03" },
     "sic": { "key": "C03" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
     "quo": { "key": null },
     "rel": { "key": "R03" },
-    "sic": { "key": "C11" },
-    "status": "InUse",
-    "parent": "S"
+    "sic": { "key": "C11", "parent": true },
+    "status": "InUse"
   },
   {
     "type": "CRC",
     "quo": { "key": "C01" },
     "rel": { "key": "R01" },
-    "sic": { "key": "C11" },
-    "status": "InUse",
-    "parent": "S"
+    "sic": { "key": "C11", "parent": true },
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C11" },
+    "quo": { "key": "C11", "parent": true },
     "rel": { "key": null },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C12" },
+    "quo": { "key": "C12", "parent": true },
     "rel": { "key": "R11" },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C13" },
+    "quo": { "key": "C13", "parent": true },
     "rel": { "key": "R12" },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C12" },
+    "quo": { "key": "C12", "parent": true },
     "rel": { "key": null },
     "sic": { "key": "C10" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C14" },
+    "quo": { "key": "C14", "parent": true },
     "rel": { "key": "R12" },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
   {
     "type": "CRC",
-    "quo": { "key": "C14" },
+    "quo": { "key": "C14", "parent": true },
     "rel": { "key": "R11" },
     "sic": { "key": "C01" },
-    "status": "InUse",
-    "parent": "Q"
+    "status": "InUse"
   },
 
 

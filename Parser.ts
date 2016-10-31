@@ -1,65 +1,77 @@
 import { PNode, MNode, CNode, RNode } from "./Nodes"
 import { LinkStatus, Word, RuleParent, Rule, CSwitch, Delivery } from "./Links"
-import * as DB from "./DataLayerSync"
+import { DataLayerSync } from "./DataLayerSync"
 
-export module Parser {
+// --------------------------------------------------------------------------
 
-  enum Flag {
-    DoesNotFit, // 0,
-    NotYetParticipated, // 1
-    OnlyParticipatedAsParent, // 2
-    ActivationUsed // 3
+class ParseState {
+  tokens: Array<string> // the input string
+  list: Array<Delivery> // result of parsing?
+  stack: Array<StackItem>
+  lx: number // index of left in stack (or -1)
+  rx: number // index of right in stack (or -1)
+  left: StackItem // pointer to left item (or null)
+  right: StackItem // pointer to right item (or null)
+  rule: Rule // active rule
+  l: string[] // log, instead of dumping to console
+  constructor(input: string) {
+    this.tokens = input.split(' ')
+    this.list = []
+    this.stack = []
+    this.left = null
+    this.right = null
+    this.rule = null
+    this.l = []
+  }
+  setLeft(lx: number): void {
+    this.lx = lx
+    this.left = this.stack[lx]
+  }
+  setRight(rx: number): void {
+    this.rx = rx
+    this.right = this.stack[rx]
   }
 
-  class StackItem {
-    cnode: CNode
-    pos: number // index in token list 's_seq'
-    token: string // my own addition, why not?
-    status: LinkStatus
-    flag: Flag
-  }
-
-  class ParseState {
-    tokens: Array<string> // the input string
-    list: Array<Delivery> // result of parsing?
-    stack: Array<StackItem>
-    lx: number // index of left in stack (or -1)
-    rx: number // index of right in stack (or -1)
-    left: StackItem // pointer to left item (or null)
-    right: StackItem // pointer to right item (or null)
-    rule: Rule // active rule
-    l: string[] // log, instead of dumping to console
-    constructor(input: string) {
-      this.tokens = input.split(' ')
-      this.list = []
-      this.stack = []
-      this.left = null
-      this.right = null
-      this.rule = null
-      this.l = []
-    }
-    setLeft(lx: number): void {
-      this.lx = lx
-      this.left = this.stack[lx]
-    }
-    setRight(rx: number): void {
-      this.rx = rx
-      this.right = this.stack[rx]
-    }
-
-    log(s: any) {
-      if (typeof s === 'string') {
-        this.l.push(s)
-      } else {
-        this.l.push(JSON.stringify(s, null, 2))
-      }
-    }
-    getLog(): string {
-      return this.l.join("\n")
+  log(s: any) {
+    if (typeof s === 'string') {
+      this.l.push(s)
+    } else {
+      this.l.push(JSON.stringify(s, null, 2))
     }
   }
+  getLog(): string {
+    return this.l.join("\n")
+  }
+}
 
-  export function parse(input: string, callback: (err, data?) => any): void {
+class StackItem {
+  cnode: CNode
+  pos: number // index in token list 's_seq'
+  token: string // my own addition, why not?
+  status: LinkStatus
+  flag: Flag
+}
+
+enum Flag {
+  DoesNotFit, // 0,
+  NotYetParticipated, // 1
+  OnlyParticipatedAsParent, // 2
+  ActivationUsed // 3
+}
+
+// --------------------------------------------------------------------------
+
+export class Parser {
+
+  DB: any
+  constructor(data: {nodes: any, links: any}) {
+    this.DB = new DataLayerSync(data)
+  }
+
+  parse(
+    input: string,
+    callback: (err, data?) => any)
+    : void {
 
     let st = new ParseState(input)
 
@@ -71,13 +83,13 @@ export module Parser {
       let token = st.tokens[i]
 
       // 1. Get PNode corresponding to token
-      let pnode: PNode = DB.findPNode(token)
+      let pnode: PNode = this.DB.findPNode(token)
       if (!pnode) {
         return callback("Cannot find PNode for: " + token)
       }
 
       // 2. Find Words where quo == PNode
-      let words: Word[] = DB.findWords(pnode)
+      let words: Word[] = this.DB.findWords(pnode)
       if (!words || words.length === 0) {
         return callback("Cannot find any Words for PNode: " + pnode.key)
       }
@@ -101,7 +113,7 @@ export module Parser {
           st.setLeft(lx)
           if (st.left.flag != Flag.NotYetParticipated) continue
           st.log("PAIR: " + st.left.token + "___" + st.right.token)
-          pairOfCs(st)
+          this.pairOfCs(st)
           st.log('--------------------')
         }
       }
@@ -115,7 +127,7 @@ export module Parser {
           st.setLeft(lx)
           if (st.left.flag != Flag.ActivationUsed) continue
           st.log("PAIR: " + st.left.token + " / " + st.right.token)
-          pairOfCs(st)
+          this.pairOfCs(st)
           st.log('--------------------')
         }
       }
@@ -135,9 +147,9 @@ export module Parser {
    * Run on each pair of C's
    */
   // function pairOfCs (lx: number, rx: number, stack: Array<StackItem>): void {
-  function pairOfCs (st: ParseState): void {
+  pairOfCs (st: ParseState): void {
 
-    let rules: Rule[] = DB.findRules(st.left.cnode, st.right.cnode)
+    let rules: Rule[] = this.DB.findRules(st.left.cnode, st.right.cnode)
     if (!rules || rules.length === 0) return
     let last_used_rule: Rule = null
 
@@ -184,7 +196,7 @@ export module Parser {
       }
 
       if (rule.rel === null) { // was RNULL
-        switchCs(st)
+        this.switchCs(st)
       } else {
         // if r_parent == S, s_fright = 2 and s_fleft = 3
         if (rule.parent === RuleParent.Sic) {
@@ -199,25 +211,24 @@ export module Parser {
           }
         }
 
-        displayProposition(st)
+        this.displayProposition(st)
       }
     } // for rule of rules
     if (last_used_rule !== null) {
       st.rule = last_used_rule
-      switchCs(st)
+      this.switchCs(st)
     }
   }
 
   /**
    * Switch-Cs function
    */
-  // function switchCs (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
-  function switchCs (st: ParseState): void {
-    let cswitch1: CSwitch = DB.findCSwitch(st.rule.c1(), st.rule.c2()) // r_quonode + r_sicnode + ***
+  switchCs (st: ParseState): void {
+    let cswitch1: CSwitch = this.DB.findCSwitch(st.rule.c1(), st.rule.c2()) // r_quonode + r_sicnode + ***
     if (cswitch1.status === LinkStatus.InUse) { // == W
       st.left.cnode = cswitch1.c3() // s_node = c_sicnode
     }
-    let cswitch2: CSwitch = DB.findCSwitch(st.rule.c2(), st.rule.c1()) // r_sicnode + r_quonode + ***
+    let cswitch2: CSwitch = this.DB.findCSwitch(st.rule.c2(), st.rule.c1()) // r_sicnode + r_quonode + ***
     if (cswitch2.status === LinkStatus.InUse) { // == W
       st.right.cnode = cswitch2.c3() // s_node = c_sicnode
     }
@@ -226,8 +237,7 @@ export module Parser {
   /**
    * Display proposition function
    */
-  // function displayProposition (rule: Rule, lx: number, rx: number, stack: Array<StackItem>): void {
-  function displayProposition (st: ParseState): void {
+  displayProposition (st: ParseState): void {
     st.log('> in displayProposition')
 
     // The parent and dependent words are identified in the stack.
@@ -243,11 +253,11 @@ export module Parser {
       dep = st.right
     }
 
-    let parP: PNode = DB.findPNode(par.token)
-    let depP: PNode = DB.findPNode(dep.token)
+    let parP: PNode = this.DB.findPNode(par.token)
+    let depP: PNode = this.DB.findPNode(dep.token)
 
-    let parW: Word = DB.findWord(parP, par.cnode)
-    let depW: Word = DB.findWord(depP, dep.cnode)
+    let parW: Word = this.DB.findWord(parP, par.cnode)
+    let depW: Word = this.DB.findWord(depP, dep.cnode)
 
     let parM: MNode = parW.m() // first n_label in MRM
     let depM: MNode = depW.m() // third n_label in MRM

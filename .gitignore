@@ -1,4 +1,13 @@
-*.js
 node_modules/
 typings/
 ~$*
+
+# *.js
+DataConverter.js
+DataLayerSync.js
+Main.js
+Parser.js
+DataLayer.js
+Links.js
+Nodes.js
+ngd-parser.js

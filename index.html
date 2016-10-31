@@ -39,7 +39,7 @@
                   <div class="form-group">
                     <input class="form-control" id="inputPhrase" type="text" value="John kiss ed Lucy" placeholder="Input phrase">
                   </div>
-                  <button class="btn btn-primary" id="btnParse" type="submit">Parse</button>
+                  <button class="btn btn-primary" id="btnParse" type="button">Parse</button>
                 </form>
                 <h3>Log</h3>
                 <pre id="log"></pre>
@@ -50,31 +50,38 @@
           </div>
           <div class="tab-pane" id="data" role="tabpanel">
             <h3>Nodes</h3>
-            <p>...</p>
+            <div id="data-nodes">
+              <table class="table table-condensed table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Key</th>
+                    <th>Label</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
             <h3>Links</h3>
-            <p>...</p>
+            <div id="data-links">
+              <table class="table table-condensed table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Quo</th>
+                    <th>Rel</th>
+                    <th>Sic</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <script type="text/javascript">
-      require(['Parser'], function(p) {
-        $('#btnParse').click(() => {
-          var input = $('#inputPhrase').val()
-          p.Parser.parse(input, (err, data) => {
-            if (err) {
-              $('#log').text('')
-              $('#out').text(err)
-            } else {
-              $('#log').text(data.log)
-              $('#out').text(data.output)
-            }
-          })
-          return false
-        })
-      })
-      
-    </script>
+    <script type="text/javascript" src="script.js"></script>
     <script type="text/javascript">
       var nodes = [
         {id: 'P1', label: 'P1'},

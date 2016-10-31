@@ -47,7 +47,7 @@ html
                 form
                   .form-group
                     input#inputPhrase.form-control(type='text', value='John kiss ed Lucy', placeholder='Input phrase')
-                  button#btnParse.btn.btn-primary(type="submit") Parse
+                  button#btnParse.btn.btn-primary(type="button") Parse
                 h3 Log
                 pre#log
                 h3 Output
@@ -55,27 +55,27 @@ html
 
           #data.tab-pane(role='tabpanel')
             h3 Nodes
-            p ...
+            div#data-nodes
+              table.table.table-condensed.table-striped.table-hover
+                thead
+                  tr
+                    th Type
+                    th Key
+                    th Label
+                tbody
             h3 Links
-            p ...
+            div#data-links
+              table.table.table-condensed.table-striped.table-hover
+                thead
+                  tr
+                    th Type
+                    th Quo
+                    th Rel
+                    th Sic
+                    th Status
+                tbody
 
-    //- RequireJS
-    script(type='text/javascript').
-      require(['Parser'], function(p) {
-        $('#btnParse').click(() => {
-          var input = $('#inputPhrase').val()
-          p.Parser.parse(input, (err, data) => {
-            if (err) {
-              $('#log').text('')
-              $('#out').text(err)
-            } else {
-              $('#log').text(data.log)
-              $('#out').text(data.output)
-            }
-          })
-          return false
-        })
-      })
+    script(type='text/javascript',src='script.js')
       
     //- Visualisation
     script(type='text/javascript').

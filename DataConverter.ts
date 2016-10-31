@@ -105,10 +105,8 @@ export function mkRule(data, nodeDict): Rule {
   }
   let o:Rule = new Rule(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
   o.setStatusStr(data.status)
-  switch (data.parent) {
-    case 'Q': o.setParentQuo(); break
-    case 'S': o.setParentSic(); break
-  }
+  if (data.quo.parent) o.setParentQuo()
+  else if (data.sic.parent) o.setParentSic()
   return o
 }
 
