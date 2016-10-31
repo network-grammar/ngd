@@ -32,6 +32,15 @@ export enum LinkStatus {
   ProvisionalJunction // Z
 }
 
+export type LinkJSON = {
+  type : string, // "PCM"/"CRC"/"CCC"/"MRM"
+  quo  : { key: string, parent?: boolean },
+  rel  : { key: string },
+  sic  : { key: string, parent?: boolean }
+  status: string // "InUse"/"Deleted"/"ProvisionalNotUsedYet"/"ProvisionalJunction"
+}
+
+
 /**
  * A word in the NG sense: P used as C means M
  * P/C/M

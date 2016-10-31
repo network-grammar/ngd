@@ -9,6 +9,12 @@ export class Node {
   }
 }
 
+export type NodeJSON = {
+  type : string, // "P"/"M"/"C"/"R"
+  key  : string,
+  label: string
+}
+
 export enum NodeType {
   P, // phonological string
   M, // meaning
@@ -41,10 +47,6 @@ export class CNode extends Node {
   constructor(key: string, label: string) {
     super(NodeType.C, key, label)
   }
-  // constructor(key: string, desc: string) {
-  //   super(NodeType.C, key)
-  //   this.description = desc
-  // }
 }
 
 /**

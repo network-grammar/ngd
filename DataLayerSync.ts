@@ -19,7 +19,8 @@ export class DataLayerSync {
     let linksJSON = data.links
 
     // Convert JSON lists into lists of actual JS objects
-    // Where Links point to Node instances
+    // One instance for every DB entry
+    // Links point to Node instances
     let nodeDict = {}
     for (let n of nodesJSON) {
       let node:Node = DC.mkNode(n)
@@ -45,15 +46,18 @@ export class DataLayerSync {
   }
 
   /**
-   * Find Words (P/C/M) for a given PNode and optional CNode
+   * Find Words (P/C/M) for a given nodes
    */
-  findWords(pnode: PNode, cnode?: CNode): Word[] {
+  findWords(pnode?: PNode, cnode?: CNode, mnode?: MNode): Word[] {
     let words: Word[] = []
     for (let link of this.links) {
-      if (link.type === LinkType.Word && link.quo === pnode) {
-        if (!cnode || link.rel === cnode) { // also filter by CNode if supplied
-          words.push(link as Word)
-        }
+      if (link.type === LinkType.Word)
+        if (!pnode || link.quo === pnode) {
+          if (!cnode || link.rel === cnode) {
+            if (!mnode || link.sic === mnode) {
+              words.push(<Word>link)
+            }
+          }
       }
     }
     return words
@@ -66,7 +70,7 @@ export class DataLayerSync {
     let words: Word[] = []
     for (let link of this.links) {
       if (link.type === LinkType.Word && link.quo === pnode && link.rel === cnode) {
-        words.push(link as Word)
+        words.push(<Word>link)
       }
     }
     if (words.length === 0) {
@@ -87,7 +91,7 @@ export class DataLayerSync {
     let rules: Rule[] = []
     for (let link of this.links) {
       if (link.type === LinkType.Rule && link.quo === left && link.sic === right) {
-        rules.push(link as Rule)
+        rules.push(<Rule>link)
       }
     }
     return rules
@@ -99,10 +103,31 @@ export class DataLayerSync {
   findCSwitch(c1: CNode, c2: CNode): CSwitch {
     for (let link of this.links) {
       if (link.type === LinkType.CSwitch && link.quo === c1 && link.sic === c2) {
-        return link as CSwitch
+        return <CSwitch>link
       }
     }
     return null
+  }
+
+  /**
+   * Find Deliveries (M/R/M) where either (but not both) QUO or SIC is in a list of M keys
+   */
+  findDeliveries(ms: MNode[]): Delivery[] {
+    let dels: Delivery[] = []
+    let in_ms = (x: MNode) => {
+      for (let m of ms) {
+        if (x === m) return true
+      }
+      return false
+    }
+    for (let link of this.links) {
+      let quo_in_ms = in_ms(link.quo)
+      let sic_in_ms = in_ms(link.sic)
+      if (link.type === LinkType.Delivery && (quo_in_ms != sic_in_ms)) { // XOR
+        dels.push(<Delivery>link)
+      }
+    }
+    return dels
   }
 
 }

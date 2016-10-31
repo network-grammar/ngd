@@ -2,11 +2,11 @@
  * Functions for converting from raw JSON to actual objects
  */
 
-import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Link, Word, Rule, CSwitch, Delivery} from "./Links"
+import {Node, NodeJSON, NodeType, PNode, CNode, MNode, RNode} from "./Nodes"
+import {Link, LinkJSON, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Links"
 
 // ---------------------------------------------------------------------------
-// -- Generic
+// -- Generic make functions
 
 export function mkNode(data): Node {
   switch (data.type) {
@@ -33,7 +33,7 @@ export function mkLink(data, nodeDict): Link {
 }
 
 // ---------------------------------------------------------------------------
-// -- Nodes
+// -- Making Nodes
 
 /**
  * Make a PNode object from raw data
@@ -80,7 +80,7 @@ export function mkRNode(data): RNode {
 }
 
 // ---------------------------------------------------------------------------
-// -- Links
+// -- Making Links
 
 /**
  * Make a Word object from raw data
@@ -134,4 +134,45 @@ export function mkDelivery(data, nodeDict): Delivery {
   let o:Delivery = new Delivery(nodeDict[data.quo.key], nodeDict[data.rel.key], nodeDict[data.sic.key])
   o.setStatusStr(data.status)
   return o
+}
+
+// ---------------------------------------------------------------------------
+// -- Un-making Nodes/Links into serialisable JSON objects
+
+/**
+ * Serialise Node to JSON object
+ */
+export function serNode(node: Node): NodeJSON {
+  return {
+    type: NodeType[node.type],
+    key: node.key,
+    label: node.label
+  }
+}
+
+/**
+ * Serialise Link to JSON object
+ */
+export function serLink(link: Link): LinkJSON {
+  let obj: LinkJSON = {
+    type: null,
+    quo: { key: link.quo.key },
+    rel: { key: link.rel.key },
+    sic: { key: link.sic.key },
+    status: LinkStatus[link.status]
+  }
+  switch (link.type) {
+    case LinkType.Word: obj.type = "PCM"; break
+    case LinkType.Rule: obj.type = "CRC"; break
+    case LinkType.CSwitch: obj.type = "CCC"; break
+    case LinkType.Delivery: obj.type = "MRM"; break
+  }
+  if (link.type === LinkType.Rule) {
+    if ((<Rule>link).isParentQuo()) {
+      obj.quo['parent'] = true
+    } else {
+      obj.rel['parent'] = true
+    }
+  }
+  return obj
 }
