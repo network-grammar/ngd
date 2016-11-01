@@ -4,7 +4,7 @@
  */
 
 import {Node, NodeType, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Link, LinkType, Word, Rule, CSwitch, Delivery} from "./Links"
+import {Link, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Links"
 import * as DC from "./DataConverter"
 
 // --------------------------------------------------------------------------
@@ -32,6 +32,9 @@ export class DataLayerSync {
     })
   }
 
+// --------------------------------------------------------------------------
+// --- Nodes
+
   /**
    * Find a PNode by its label.
    * This is something like a lexicon lookup.
@@ -45,16 +48,19 @@ export class DataLayerSync {
     return null
   }
 
+// --------------------------------------------------------------------------
+// --- Links
+
   /**
-   * Find Words (P/C/M) for a given nodes
+   * Find Words (P/C/M) for given nodes
    */
-  findWords(pnode?: PNode, cnode?: CNode, mnode?: MNode): Word[] {
+  findWords(quo?: PNode, rel?: CNode, sic?: MNode): Word[] {
     let words: Word[] = []
     for (let link of this.links) {
       if (link.type === LinkType.Word)
-        if (!pnode || link.quo === pnode) {
-          if (!cnode || link.rel === cnode) {
-            if (!mnode || link.sic === mnode) {
+        if (!quo || link.quo === quo) {
+          if (!rel || link.rel === rel) {
+            if (!sic || link.sic === sic) {
               words.push(<Word>link)
             }
           }
@@ -85,13 +91,18 @@ export class DataLayerSync {
   }
 
   /**
-   * Find Rules (C/R/C) for 2 given CNodes
+   * Find Rules (C/R/C) for given nodes
    */
-  findRules(left: CNode, right: CNode): Rule[] {
+  findRules(quo?: CNode, rel?: RNode, sic?: CNode): Rule[] {
     let rules: Rule[] = []
     for (let link of this.links) {
-      if (link.type === LinkType.Rule && link.quo === left && link.sic === right) {
-        rules.push(<Rule>link)
+      if (link.type === LinkType.Rule)
+        if (!quo || link.quo === quo) {
+          if (!rel || link.rel === rel) {
+            if (!sic || link.sic === sic) {
+              rules.push(<Rule>link)
+            }
+          }
       }
     }
     return rules
@@ -100,9 +111,9 @@ export class DataLayerSync {
   /**
    * Find a (single) C-Switch (C/C/C) for 2 given CNodes
    */
-  findCSwitch(c1: CNode, c2: CNode): CSwitch {
+  findCSwitch(quo: CNode, sic: CNode): CSwitch {
     for (let link of this.links) {
-      if (link.type === LinkType.CSwitch && link.quo === c1 && link.sic === c2) {
+      if (link.type === LinkType.CSwitch && link.quo === quo && link.sic === sic) {
         return <CSwitch>link
       }
     }
@@ -128,6 +139,28 @@ export class DataLayerSync {
       }
     }
     return dels
+  }
+
+  /**
+   * Get all provisional rules and words
+   * NOTE This is probably not good design and should be avoided
+   */
+  getProvisionalLinks(): {rules: Rule[], words: Word[]} {
+    let obj = {
+      rules: [],
+      words: []
+    }
+    for (let link of this.links) {
+      if (link.status === LinkStatus.ProvisionalJunction || link.status === LinkStatus.ProvisionalNotUsedYet) {
+        if (link.type === LinkType.Rule) {
+          obj.rules.push(<Rule>link)
+        }
+        if (link.type === LinkType.Word) {
+          obj.words.push(<Word>link)
+        }
+      }
+    }
+    return obj
   }
 
 }
