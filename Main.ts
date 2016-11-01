@@ -17,7 +17,7 @@ parser.parse(input, (err, data) => {
     console.error(err)
   } else {
     console.log(data.log)
-    console.log("\n\n")
+    console.log("OUTPUT")
     console.log(data.output)
   }
 })

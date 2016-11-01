@@ -7,21 +7,21 @@ import { DataLayerSync } from "./DataLayerSync"
 class ParseState {
   tokens: string[] // the input string
   list: MNode[]
+  dlist: Delivery[]
   stack: StackItem[]
   lx: number // index of left in stack (or -1)
   rx: number // index of right in stack (or -1)
   left: StackItem // pointer to left item (or null)
   right: StackItem // pointer to right item (or null)
   rule: Rule // active rule
-  l: string[] // log, instead of dumping to console
   constructor(input: string) {
     this.tokens = input.split(' ')
     this.list = []
+    this.dlist = []
     this.stack = []
     this.left = null
     this.right = null
     this.rule = null
-    this.l = []
   }
   setLeft(lx: number): void {
     this.lx = lx
@@ -32,16 +32,6 @@ class ParseState {
     this.right = this.stack[rx]
   }
 
-  log(s: any) {
-    if (typeof s === 'string') {
-      this.l.push(s)
-    } else {
-      this.l.push(JSON.stringify(s, null, 2))
-    }
-  }
-  getLog(): string {
-    return this.l.join("\n")
-  }
 }
 
 class StackItem {
@@ -84,7 +74,7 @@ status
 export class Parser {
 
   // Interface to "static" data
-  private DB: any
+  DB: any
 
   // Store everything provisional as class instance
   // Don't know if this makes sense yet
@@ -93,12 +83,37 @@ export class Parser {
     words: Word[]
   }
 
+  //
   constructor(data: {nodes: any, links: any}) {
     this.DB = new DataLayerSync(data)
     // NOTE: this is probably bad design
     this.provisionals = this.DB.getProvisionalLinks()
   }
 
+  // Logging
+  logMessages: string[] = []
+
+  /**
+   * Add message to log
+   */
+  log(s: any) {
+    if (typeof s === 'string') {
+      this.logMessages.push(s)
+    } else {
+      this.logMessages.push(JSON.stringify(s, null, 2))
+    }
+  }
+
+  /**
+   * Get entire log as single string
+   */
+  getLog(): string {
+    return this.logMessages.join("\n")
+  }
+
+  /**
+   * Single parse iteration
+   */
   parse(
     input: string,
     callback: (err, data?) => any)
@@ -107,8 +122,8 @@ export class Parser {
     // NOTE: maybe we don't want to pass this about, but instead make it a class instance?
     let st = new ParseState(input)
 
-    st.log("INPUT: " + input)
-    st.log('--------------------')
+    this.log("INPUT: " + input)
+    this.log('--------------------')
 
     // For each p_string
     for (let i in st.tokens) {
@@ -150,9 +165,9 @@ export class Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
           if (st.left.flag !== Flag.NotYetParticipated && st.left.flag !== Flag.OnlyParticipatedAsParent) continue
-          st.log("PAIR₁: " + st.left.token + "___" + st.right.token)
+          this.log("PAIR₁: " + st.left.token + "___" + st.right.token)
           this.pairOfCs(st)
-          st.log('--------------------')
+          this.log('--------------------')
         }
       }
 
@@ -163,9 +178,9 @@ export class Parser {
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
           if (st.left.flag !== Flag.ActivationUsed) continue
-          st.log("PAIR₂: " + st.left.token + "___" + st.right.token)
+          this.log("PAIR₂: " + st.left.token + "___" + st.right.token)
           this.pairOfCs(st)
-          st.log('--------------------')
+          this.log('--------------------')
         }
       }
 
@@ -175,10 +190,10 @@ export class Parser {
 
     // We're done
     return callback(null, {
-      output: "not sure what the output is...",
+      output: st.dlist,
       parseState: st,
       provisionals: this.provisionals,
-      log: st.getLog()
+      log: this.getLog()
     })
   }
 
@@ -192,26 +207,24 @@ export class Parser {
     let last_used_rule: Rule = null
 
     // ----------------------------
-    st.log("STACK")
+    this.log("STACK")
     for (let item of st.stack) {
-      st.log("- CNode: " + item.cnode.key + " " + item.cnode.label)
-      st.log("  PNode: " + item.pnode.key + " " + item.pnode.label + " (" + item.pos  + ")")
-      st.log("   Stat: " + LinkStatus[item.status])
-      st.log("   Flag: " + Flag[item.flag] + " (" + item.flag  + ")")
-      st.log("")
+      this.log("- CNode: " + item.cnode.key + " " + item.cnode.label)
+      this.log("  PNode: " + item.pnode.key + " " + item.pnode.label + " (" + item.pos  + ")")
+      this.log("   Stat: " + LinkStatus[item.status])
+      this.log("   Flag: " + Flag[item.flag] + " (" + item.flag  + ")")
     }
-    st.log("RULES")
+    this.log("RULES")
     for (let rule of rules) {
-      st.log("- Quo: " + rule.quo.key + " " + rule.quo.label)
+      this.log("- Quo: " + rule.quo.key + " " + rule.quo.label)
       if (rule.rel) {
-        st.log("  Rel: " + rule.rel.key + " " + rule.rel.label)
+        this.log("  Rel: " + rule.rel.key + " " + rule.rel.label)
       } else {
-        st.log("  Rel: undefined")
+        this.log("  Rel: undefined")
       }
-      st.log("  Sic: " + rule.sic.key + " " + rule.sic.label)
-      st.log(" Stat: " + LinkStatus[rule.status])
-      st.log("  Par: " + (rule.isParentQuo() ? 'Q' : 'S'))
-      st.log("")
+      this.log("  Sic: " + rule.sic.key + " " + rule.sic.label)
+      this.log(" Stat: " + LinkStatus[rule.status])
+      this.log("  Par: " + (rule.isParentQuo() ? 'Q' : 'S'))
     }
     // ----------------------------
 
@@ -235,7 +248,7 @@ export class Parser {
         if (st.stack[x].flag === Flag.NotYetParticipated &&
             (st.stack[x].pos === st.left.pos || st.stack[x].pos === st.right.pos)) {
           st.stack[x].flag = Flag.DoesNotFit
-          st.log("> discarded stack entry " + x)
+          this.log("> discarded stack entry " + x)
         }
       }
 
@@ -284,7 +297,7 @@ export class Parser {
    * Switch-Cs function
    */
   switchCs (st: ParseState): void {
-    // st.log('> in switchCs')
+    // this.log('> in switchCs')
 
     // NOTE: what if there's more than one matching C-switch?
     let cswitch1: CSwitch = this.DB.findCSwitch(st.rule.c1(), st.rule.c2()) // r_quonode + r_sicnode + ***
@@ -301,7 +314,7 @@ export class Parser {
    * Display proposition function
    */
   displayProposition (st: ParseState): void {
-    // st.log('> in displayProposition')
+    // this.log('> in displayProposition')
 
     // The parent and dependent words are identified in the stack.
     // The higher entry in the stack gives the parent word if the successful RULE record has r_parent = ‘S’, or dependent if r_parent = ‘Q’.
@@ -325,15 +338,16 @@ export class Parser {
     st.list.push(depM)
 
     let r: RNode = st.rule.r()
+    st.dlist.push(new Delivery(parM, r, depM))
 
-    st.log('PROPOSITION: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
+    this.log('PROPOSITION: ' + parM.key + ' ' + parM.label + ' / ' + r.key + ' ' + r.label + ' / ' + depM.key + ' ' + depM.label)
   }
 
   /**
    * At sentence end function
    */
   sentenceEnd (st: ParseState): void {
-    st.log('> in sentenceEnd')
+    // this.log('> in sentenceEnd')
     let entries: StackItem[] = []
 
     // Work top-down through the stack looking for entries with s_flag == 1
@@ -379,7 +393,7 @@ export class Parser {
         }
       }
 
-      st.log('Sentence is grammatical')
+      this.log('Sentence is grammatical')
 
     } else {
 
@@ -407,12 +421,12 @@ export class Parser {
         // for each of these s_seq values
         for (let pos of poss) {
           // Display a line with the p_string for s_seq followed by ‘ungrammatical: string cannot be linked’.
-          st.log('Ungrammatical: token "' + st.tokens[pos] + '" cannot be linked')
+          this.log('Ungrammatical: token "' + st.tokens[pos] + '" cannot be linked')
         }
       } else if (poss.length == 1) {
         // If there is only one orphan p_string (only one s_seq value occurs with s_flag = ‘1’)
-        st.log('Token "' + poss[0] + '" cannot be linked')
-        st.log('Trying to infer new links')
+        this.log('Token "' + poss[0] + '" cannot be linked')
+        this.log('Trying to infer new links')
         this.inferringLinks(poss[0], st)
       } else {
         // This is a HARD error
@@ -425,7 +439,7 @@ export class Parser {
    * Infer links function
    */
   inferringLinks (orphan_pos: number, st: ParseState): void {
-    st.log('> in inferringLinks')
+    this.log('> in inferringLinks')
 
     let orphanP: PNode = this.DB.findPNode(st.tokens[orphan_pos])
     // let x_key = orphanP.key
