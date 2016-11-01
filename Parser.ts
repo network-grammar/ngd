@@ -64,8 +64,8 @@ enum Flag {
 
 /** Some general notes, relating to NGD 1.0 document **
 
-p_string = input
-p_seq = counter `i`
+p_seq = i
+p_string = tokens[i]
 s_seq = StackItem.pos
 l_list = ParseState.list
 
@@ -110,24 +110,29 @@ export class Parser {
     st.log("INPUT: " + input)
     st.log('--------------------')
 
-    // for (let i=0; i<tokens.length; i++) {
+    // For each p_string
     for (let i in st.tokens) {
       let token = st.tokens[i]
 
-      // 1. Get PNode corresponding to token
+      // Get PNode corresponding to token
       let pnode: PNode = this.DB.findPNode(token)
       if (!pnode) {
         return callback("Cannot find PNode for: " + token)
       }
 
-      // 2. Find Words where quo == PNode
+      // Find Words where quo == PNode
       let words: Word[] = this.DB.findWords(pnode)
       if (!words || words.length === 0) {
         return callback("Cannot find any Words for PNode: " + pnode.key)
       }
 
-      // 3. For each, add to stack
+      // For each matching word, add to stack
       for (let word of words) {
+        // w_status == 'W' or 'Y'
+        if (word.status !== LinkStatus.InUse && word.status !== LinkStatus.ProvisionalNotUsedYet) {
+          continue
+        }
+
         let item = new StackItem()
         item.cnode = word.c()
         item.pnode = pnode
@@ -138,28 +143,27 @@ export class Parser {
         st.stack.push(item)
       }
 
-      // 4. Pair entries in stack (left flag == 1)
+      // 4. Pair entries in stack where left flag == 1 or 2
       for (let rx = st.stack.length-1; rx >= 0; rx--) {
         st.setRight(rx)
-        if (st.right.flag != Flag.NotYetParticipated) continue
+        if (st.right.flag !== Flag.NotYetParticipated) continue
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
-          if (st.left.flag != Flag.NotYetParticipated) continue
-          st.log("PAIR: " + st.left.token + "___" + st.right.token)
+          if (st.left.flag !== Flag.NotYetParticipated && st.left.flag !== Flag.OnlyParticipatedAsParent) continue
+          st.log("PAIR₁: " + st.left.token + "___" + st.right.token)
           this.pairOfCs(st)
           st.log('--------------------')
         }
       }
 
       // Pair again where left flag == 3
-      // TODO: never gets here...
       for (let rx = st.stack.length-1; rx >= 0; rx--) {
         st.setRight(rx)
-        if (st.right.flag != Flag.NotYetParticipated) continue
+        if (st.right.flag !== Flag.NotYetParticipated) continue
         for (let lx = rx-1; lx >= 0; lx--) {
           st.setLeft(lx)
-          if (st.left.flag != Flag.ActivationUsed) continue
-          st.log("PAIR: " + st.left.token + " / " + st.right.token)
+          if (st.left.flag !== Flag.ActivationUsed) continue
+          st.log("PAIR₂: " + st.left.token + "___" + st.right.token)
           this.pairOfCs(st)
           st.log('--------------------')
         }
@@ -187,19 +191,39 @@ export class Parser {
     if (!rules || rules.length === 0) return
     let last_used_rule: Rule = null
 
+    // ----------------------------
     st.log("STACK")
-    st.log(st.stack)
+    for (let item of st.stack) {
+      st.log("- CNode: " + item.cnode.key + " " + item.cnode.label)
+      st.log("  PNode: " + item.pnode.key + " " + item.pnode.label + " (" + item.pos  + ")")
+      st.log("   Stat: " + LinkStatus[item.status])
+      st.log("   Flag: " + Flag[item.flag] + " (" + item.flag  + ")")
+      st.log("")
+    }
     st.log("RULES")
-    st.log(rules)
+    for (let rule of rules) {
+      st.log("- Quo: " + rule.quo.key + " " + rule.quo.label)
+      if (rule.rel) {
+        st.log("  Rel: " + rule.rel.key + " " + rule.rel.label)
+      } else {
+        st.log("  Rel: undefined")
+      }
+      st.log("  Sic: " + rule.sic.key + " " + rule.sic.label)
+      st.log(" Stat: " + LinkStatus[rule.status])
+      st.log("  Par: " + (rule.isParentQuo() ? 'Q' : 'S'))
+      st.log("")
+    }
+    // ----------------------------
 
     for (let rule of rules) {
+      st.rule = rule
 
       // r_status != W or Y
-      if (rule.status.valueOf() !== LinkStatus.InUse || rule.status !== LinkStatus.ProvisionalNotUsedYet) {
+      if (rule.status !== LinkStatus.InUse && rule.status !== LinkStatus.ProvisionalNotUsedYet) {
         continue
       }
       // r_parent == Q and s_fleft == 3
-      if (rule.parent === RuleParent.Quo && st.left.flag === Flag.ActivationUsed) {
+      if (rule.isParentQuo() && st.left.flag === Flag.ActivationUsed) {
         continue
       }
 
@@ -211,6 +235,7 @@ export class Parser {
         if (st.stack[x].flag === Flag.NotYetParticipated &&
             (st.stack[x].pos === st.left.pos || st.stack[x].pos === st.right.pos)) {
           st.stack[x].flag = Flag.DoesNotFit
+          st.log("> discarded stack entry " + x)
         }
       }
 
@@ -230,7 +255,7 @@ export class Parser {
         st.left.status = LinkStatus.ProvisionalJunction
       }
 
-      if (rule.rel === null) { // was RNULL
+      if (!rule.rel) { // RNULL
         this.switchCs(st)
       } else {
         // if r_parent == S, s_fright = 2 and s_fleft = 3
@@ -259,12 +284,15 @@ export class Parser {
    * Switch-Cs function
    */
   switchCs (st: ParseState): void {
+    st.log('> in switchCs')
+
+    // NOTE: what if there's more than one matching C-switch?
     let cswitch1: CSwitch = this.DB.findCSwitch(st.rule.c1(), st.rule.c2()) // r_quonode + r_sicnode + ***
-    if (cswitch1.status === LinkStatus.InUse) { // == W
+    if (cswitch1 && cswitch1.status === LinkStatus.InUse) { // == W
       st.left.cnode = cswitch1.c3() // s_node = c_sicnode
     }
     let cswitch2: CSwitch = this.DB.findCSwitch(st.rule.c2(), st.rule.c1()) // r_sicnode + r_quonode + ***
-    if (cswitch2.status === LinkStatus.InUse) { // == W
+    if (cswitch2 && cswitch2.status === LinkStatus.InUse) { // == W
       st.right.cnode = cswitch2.c3() // s_node = c_sicnode
     }
   }
@@ -288,10 +316,6 @@ export class Parser {
       dep = st.right
     }
 
-    // NOTE: Wouldn't it be better to have actual WORD in StackItem?
-    // Then we wouldn't need these lookups
-    // Also applies in sentenceEnd below
-    // But need to consider switchCs function
     let parW: Word = this.DB.findWord(par.pnode, par.cnode)
     let depW: Word = this.DB.findWord(dep.pnode, dep.cnode)
 

@@ -48,12 +48,12 @@
 
   {
     "type": "M",
-    "key": "M1",
+    "key": "M01",
     "label": "MALE PERSON"
   },
   {
     "type": "M",
-    "key": "M2",
+    "key": "M02",
     "label": "KISS, NOT MUTUAL"
   },
   {

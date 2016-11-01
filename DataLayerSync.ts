@@ -80,10 +80,10 @@ export class DataLayerSync {
       }
     }
     if (words.length === 0) {
-      console.error('No words found for: ' + pnode + ' / ' + cnode)
+      console.error('No words found for: ' + pnode.key + ' / ' + cnode.key)
       return null
-    } else if (words.length > 0) {
-      console.error('More than one word found for: ' + pnode + ' / ' + cnode)
+    } else if (words.length > 1) {
+      console.error('More than one word found for: ' + pnode.key + ' / ' + cnode.key)
       return words[0]
     } else {
       return words[0]
