@@ -284,7 +284,7 @@ export class Parser {
    * Switch-Cs function
    */
   switchCs (st: ParseState): void {
-    st.log('> in switchCs')
+    // st.log('> in switchCs')
 
     // NOTE: what if there's more than one matching C-switch?
     let cswitch1: CSwitch = this.DB.findCSwitch(st.rule.c1(), st.rule.c2()) // r_quonode + r_sicnode + ***
@@ -301,7 +301,7 @@ export class Parser {
    * Display proposition function
    */
   displayProposition (st: ParseState): void {
-    st.log('> in displayProposition')
+    // st.log('> in displayProposition')
 
     // The parent and dependent words are identified in the stack.
     // The higher entry in the stack gives the parent word if the successful RULE record has r_parent = ‘S’, or dependent if r_parent = ‘Q’.
@@ -326,7 +326,7 @@ export class Parser {
 
     let r: RNode = st.rule.r()
 
-    st.log('Found MRM: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
+    st.log('PROPOSITION: ' + parM.label + ' / ' + r.label + ' / ' + depM.label)
   }
 
   /**

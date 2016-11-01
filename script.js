@@ -42,21 +42,27 @@ $(function () {
       }
     }
   })
-})
 
-require(['Parser'], function (p) {
-  $('#btnParse').click(() => {
-    var input = $('#inputPhrase').val()
-    var parser = new p.Parser(NGD.data)
-    parser.parse(input, (err, data) => {
-      if (err) {
-        $('#log').text('')
-        $('#out').text(err)
-      } else {
-        $('#log').text(data.log)
-        $('#out').text(data.output)
-      }
+  require(['Parser'], function (p) {
+    $('#btnParse').click(() => {
+      var input = $('#inputPhrase').val()
+      var parser = new p.Parser(NGD.data)
+      $('#output').html('')
+      parser.parse(input, (err, data) => {
+        if (err) {
+          $('#output')
+            .append($('<h3>').text('Error'))
+            .append($('<pre>').addClass('alert-danger').text(err))
+        } else {
+          for (var i in data) {
+            var out = typeof data[i] === 'string' ? data[i] : JSON.stringify(data[i], null, 2)
+            $('#output')
+              .append($('<h3>').text(i))
+              .append($('<pre>').text(out))
+          }
+        }
+      })
+      return false
     })
-    return false
   })
 })
