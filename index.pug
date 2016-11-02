@@ -76,28 +76,43 @@ html
       
     //- Visualisation
     script(type='text/javascript').
+      // https://coolors.co/8bc3e4-aadaba-fba2a6-fdd892-eeebdd
+      var colour = {
+        node: {
+          p: '#8BC3E4',
+          c: '#AADABA',
+          m: '#FBA2A6',
+          r: '#FDD892'
+        },
+        link: {
+          pcm: '#007DC5',
+          crc: '#44AF69',
+          mrm: '#F8333C',
+          ccc: '#FCAB10'
+        }
+      }
       var nodes = [
-        {id: 'P1', label: 'P1'},
-        {id: 'P2', label: 'P2'},
-        {id: 'C1', label: 'C1'},
-        {id: 'C2', label: 'C2'},
-        {id: 'M1', label: 'M1'},
-        {id: 'M2', label: 'M2'},
-        {id: 'R', label: 'R'}
+        {id: 'P1', label: 'P1', color: colour.node.p},
+        {id: 'P2', label: 'P2', color: colour.node.p},
+        {id: 'C1', label: 'C1', color: colour.node.c},
+        {id: 'C2', label: 'C2', color: colour.node.c},
+        {id: 'M1', label: 'M1', color: colour.node.m},
+        {id: 'M2', label: 'M2', color: colour.node.m},
+        {id: 'R', label: 'R', color: colour.node.r}
       ]
       var edges = [
-        {from: 'P1', to: 'M1', arrows:'to'},
-        {from: 'P2', to: 'M2', arrows:'to'},
-        {from: 'C1', to: 'C2', arrows:'to'},
-        {from: 'P1', to: 'C1'},
-        {from: 'C1', to: 'M1'},
-        {from: 'P2', to: 'C2'},
-        {from: 'C2', to: 'M2'},
-        {from: 'R', to: 'M1'},
-        {from: 'R', to: 'M2'},
-        {from: 'R', to: 'C1'},
-        {from: 'R', to: 'C2'},
-        {from: 'M1', to: 'M2'}
+        {from: 'P1', to: 'M1', arrows:'to', color: colour.link.pcm},
+        {from: 'P2', to: 'M2', arrows:'to', color: colour.link.pcm},
+        {from: 'C1', to: 'C2', arrows:'to', color: colour.link.crc},
+        {from: 'P1', to: 'C1', color: colour.link.pcm},
+        {from: 'C1', to: 'M1', color: colour.link.pcm},
+        {from: 'P2', to: 'C2', color: colour.link.pcm},
+        {from: 'C2', to: 'M2', color: colour.link.pcm},
+        {from: 'R', to: 'M1', color: colour.link.mrm},
+        {from: 'R', to: 'M2', color: colour.link.mrm},
+        {from: 'R', to: 'C1', color: colour.link.crc},
+        {from: 'R', to: 'C2', color: colour.link.crc},
+        {from: 'M1', to: 'M2', color: colour.link.mrm}
       ]
       // create a network
       var container = document.getElementById('mynetwork')
@@ -106,5 +121,8 @@ html
         edges: edges
       }
       var options = {
+        edges: {
+          width: 2
+        }
       }
       var network = new vis.Network(container, data, options)
