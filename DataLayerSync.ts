@@ -3,8 +3,8 @@
  * Just for prototyping purposes
  */
 
-import {Node, NodeType, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Link, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Links"
+import {Node, NodeType, PNode, CNode, MNode, RNode} from "./Node"
+import {Link, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Link"
 import * as DC from "./DataConverter"
 
 // --------------------------------------------------------------------------

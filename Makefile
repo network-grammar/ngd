@@ -6,9 +6,9 @@ default: *.ts
 %.js: %.ts
 	tsc $<
 
-clean:
-	# Is this dangerous?
-	rm -f *.js
+# clean:
+# 	# Is this dangerous?
+# 	rm -f *.js
 
 index.html: index.pug
 	pug --pretty $<

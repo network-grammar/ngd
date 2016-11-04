@@ -60,6 +60,10 @@ $(function () {
               .append($('<h3>').text(i))
               .append($('<pre>').text(out))
           }
+
+          // TODO: visualise network
+          // let n: Network
+          // n.toVisJS()
         }
       })
       return false

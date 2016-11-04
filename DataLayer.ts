@@ -2,8 +2,8 @@
  * A MongoDB data layer where all calls are asynchronous
  */
 
-import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Word, Rule, CSwitch, Delivery} from "./Links"
+import {Node, PNode, CNode, MNode, RNode} from "./Node"
+import {Word, Rule, CSwitch, Delivery} from "./Link"
 
 import monk = require("monk")
 import async = require("async")

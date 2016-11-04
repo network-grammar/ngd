@@ -1,5 +1,5 @@
-import { PNode, MNode, CNode, RNode } from "./Nodes"
-import { Link, LinkStatus, Word, RuleParent, Rule, CSwitch, Delivery } from "./Links"
+import { PNode, MNode, CNode, RNode } from "./Node"
+import { Link, LinkStatus, Word, RuleParent, Rule, CSwitch, Delivery } from "./Link"
 import { DataLayerSync } from "./DataLayerSync"
 
 // --------------------------------------------------------------------------

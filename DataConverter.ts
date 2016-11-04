@@ -2,8 +2,8 @@
  * Functions for converting from raw JSON to actual objects
  */
 
-import {Node, NodeJSON, NodeType, PNode, CNode, MNode, RNode} from "./Nodes"
-import {Link, LinkJSON, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Links"
+import {Node, NodeJSON, NodeType, PNode, CNode, MNode, RNode} from "./Node"
+import {Link, LinkJSON, LinkType, LinkStatus, Word, Rule, CSwitch, Delivery} from "./Link"
 
 // ---------------------------------------------------------------------------
 // -- Generic make functions

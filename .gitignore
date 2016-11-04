@@ -8,6 +8,7 @@ DataLayerSync.js
 Main.js
 Parser.js
 DataLayer.js
-Links.js
-Nodes.js
+Link.js
+Node.js
+Network.js
 ngd-parser.js

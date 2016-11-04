@@ -1,4 +1,4 @@
-import {Node, PNode, CNode, MNode, RNode} from "./Nodes"
+import {Node, PNode, CNode, MNode, RNode} from "./Node"
 
 export class Link {
   type : LinkType
@@ -15,6 +15,14 @@ export class Link {
   }
   setStatusStr(status: string): void {
     this.status = LinkStatus[status]
+  }
+  typeString(): string {
+    switch (this.type) {
+      case LinkType.Word: return 'PCM'
+      case LinkType.Rule: return 'CRC'
+      case LinkType.CSwitch: return 'CCC'
+      case LinkType.Delivery: return 'MRM'
+    }
   }
 }
 

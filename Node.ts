@@ -7,6 +7,9 @@ export class Node {
     this.key = k
     this.label = l
   }
+  typeString(): string {
+    return NodeType[this.type]
+  }
 }
 
 export type NodeJSON = {

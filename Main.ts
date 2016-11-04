@@ -1,5 +1,5 @@
-import { PNode, MNode, CNode, RNode } from "./Nodes"
-import { Word, Rule, CSwitch, Delivery } from "./Links"
+import { PNode, MNode, CNode, RNode } from "./Node"
+import { Word, Rule, CSwitch, Delivery } from "./Link"
 import { Parser } from "./Parser"
 
 const input = "John kiss ed Lucy"
