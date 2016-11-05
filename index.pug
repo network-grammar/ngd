@@ -12,20 +12,21 @@ html
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css')
-      
+
     script(src='https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js')
     script(src='ngd-parser.js')
-      
+
     style(type='text/css').
-      #mynetwork {
-      width: 100%;
-      height: 500px;
+      #canvas {
+        width: 100%;
+        height: 500px;
+        border: 1px solid #aaa;
       }
   body
 
     .container
       div
-        h1 NGD  
+        h1 NGD
           small Network Grammar Demonstrator
         p.text-muted
           em John J. Camilleri
@@ -39,16 +40,16 @@ html
         //- Tab panes
         .tab-content
           #parse.tab-pane.active(role='tabpanel')
-            .row
-              .col-sm-6
-                #mynetwork
-              .col-sm-6
-                h3 Input
-                form
-                  .form-group
-                    input#inputPhrase.form-control(type='text', value='John kiss ed Lucy', placeholder='Input phrase')
-                  button#btnParse.btn.btn-primary(type="button") Parse
-                #output
+            br
+            form.form-horizontal
+              .form-group
+                label.col-xs-1.control-label(for='inputPhrase') Input
+                .col-xs-6
+                  input#inputPhrase.form-control(type='text', value='John kiss ed Lucy', placeholder='Input phrase')
+                .col-xs-1
+                  button#btnParse.btn.btn-primary Parse
+            #canvas
+            #output
 
           #data.tab-pane(role='tabpanel')
             h3 Nodes
@@ -73,56 +74,3 @@ html
                 tbody
 
     script(type='text/javascript',src='script.js')
-      
-    //- Visualisation
-    script(type='text/javascript').
-      // https://coolors.co/8bc3e4-aadaba-fba2a6-fdd892-eeebdd
-      var colour = {
-        node: {
-          p: '#8BC3E4',
-          c: '#AADABA',
-          m: '#FBA2A6',
-          r: '#FDD892'
-        },
-        link: {
-          pcm: '#007DC5',
-          crc: '#44AF69',
-          mrm: '#F8333C',
-          ccc: '#FCAB10'
-        }
-      }
-      var nodes = [
-        {id: 'P1', label: 'P1', color: colour.node.p},
-        {id: 'P2', label: 'P2', color: colour.node.p},
-        {id: 'C1', label: 'C1', color: colour.node.c},
-        {id: 'C2', label: 'C2', color: colour.node.c},
-        {id: 'M1', label: 'M1', color: colour.node.m},
-        {id: 'M2', label: 'M2', color: colour.node.m},
-        {id: 'R', label: 'R', color: colour.node.r}
-      ]
-      var edges = [
-        {from: 'P1', to: 'M1', arrows:'to', color: colour.link.pcm},
-        {from: 'P2', to: 'M2', arrows:'to', color: colour.link.pcm},
-        {from: 'C1', to: 'C2', arrows:'to', color: colour.link.crc},
-        {from: 'P1', to: 'C1', color: colour.link.pcm},
-        {from: 'C1', to: 'M1', color: colour.link.pcm},
-        {from: 'P2', to: 'C2', color: colour.link.pcm},
-        {from: 'C2', to: 'M2', color: colour.link.pcm},
-        {from: 'R', to: 'M1', color: colour.link.mrm},
-        {from: 'R', to: 'M2', color: colour.link.mrm},
-        {from: 'R', to: 'C1', color: colour.link.crc},
-        {from: 'R', to: 'C2', color: colour.link.crc},
-        {from: 'M1', to: 'M2', color: colour.link.mrm}
-      ]
-      // create a network
-      var container = document.getElementById('mynetwork')
-      var data = {
-        nodes: nodes,
-        edges: edges
-      }
-      var options = {
-        edges: {
-          width: 2
-        }
-      }
-      var network = new vis.Network(container, data, options)

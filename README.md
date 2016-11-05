@@ -12,21 +12,31 @@ The lexicon is currently hardcoded in the `data` directory; see files `nodes.jso
 ## Requirements
 
 - Node.js
-- TypeScript: `npm install --global typescript`
+- TypeScript & Typings: `npm install --global typescript typings`
 - Package dependencies: `npm install`
+- Typings: `typings install`
 
-## Compiling
+
+## Compiling & running
+
+### Local
 
 Simply call the TypeScript compiler:
 
-```shell
+```sh
 $ tsc
 ```
-
-## Running
 
 Run the Main module with Node.js:
 
 ```shell
 $ node Main
 ```
+
+### Web interface
+
+```sh
+$ make ngd-parser.js
+```
+
+Then open `index.html` in a browser.

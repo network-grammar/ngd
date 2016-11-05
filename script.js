@@ -3,10 +3,29 @@ NGD = {
   data: {
     nodes: [],
     links: []
-  }
+  },
+  vis: null // visualisation object
 }
 
 $(function () {
+  // Init vis canvas
+  var container = document.getElementById('canvas')
+  var options = {
+    edges: {
+      smooth: {
+        type: 'discrete',
+        roundness: 0
+      },
+      width: 2
+    },
+    nodes: {
+      mass: 5,
+      shape: 'dot',
+      size: 20
+    }
+  }
+  NGD.vis = new vis.Network(container, {}, options)
+
   // Load nodes
   $.ajax({
     url: 'data/nodes.json',
@@ -61,12 +80,17 @@ $(function () {
               .append($('<pre>').text(out))
           }
 
-          // TODO: visualise network
-          // let n: Network
-          // n.toVisJS()
+          visualise(data.network)
         }
       })
       return false
     })
   })
+
+  /* global vis */
+  function visualise (network) {
+    var data = network.toVisJS()
+    console.log(data)
+    NGD.vis.setData(data)
+  }
 })

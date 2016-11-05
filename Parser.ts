@@ -1,5 +1,6 @@
 import { PNode, MNode, CNode, RNode } from "./Node"
 import { Link, LinkStatus, Word, RuleParent, Rule, CSwitch, Delivery } from "./Link"
+import { Network, Junction } from "./Network"
 import { DataLayerSync } from "./DataLayerSync"
 
 // --------------------------------------------------------------------------
@@ -7,7 +8,8 @@ import { DataLayerSync } from "./DataLayerSync"
 class ParseState {
   tokens: string[] // the input string
   list: MNode[]
-  dlist: Delivery[]
+  // dlist: Delivery[]
+  network: Network
   stack: StackItem[]
   lx: number // index of left in stack (or -1)
   rx: number // index of right in stack (or -1)
@@ -17,7 +19,8 @@ class ParseState {
   constructor(input: string) {
     this.tokens = input.split(' ')
     this.list = []
-    this.dlist = []
+    // this.dlist = []
+    this.network = new Network(this.tokens)
     this.stack = []
     this.left = null
     this.right = null
@@ -190,7 +193,8 @@ export class Parser {
 
     // We're done
     return callback(null, {
-      output: st.dlist,
+      // output: st.dlist,
+      network: st.network,
       parseState: st,
       provisionals: this.provisionals,
       log: this.getLog()
@@ -338,7 +342,25 @@ export class Parser {
     st.list.push(depM)
 
     let r: RNode = st.rule.r()
-    st.dlist.push(new Delivery(parM, r, depM))
+    let d: Delivery = new Delivery(parM, r, depM)
+    // st.dlist.push(d)
+
+    // TODO: left/right VS par/dep
+    let j = new Junction()
+    j.left = {
+      word: parW,
+      pos: par.pos,
+      token: par.token
+    }
+    j.right = {
+      word: depW,
+      pos: dep.pos,
+      token: dep.token
+    }
+    j.rule = st.rule
+    j.delivery = d
+
+    st.network.junctions.push(j)
 
     this.log('PROPOSITION: ' + parM.key + ' ' + parM.label + ' / ' + r.key + ' ' + r.label + ' / ' + depM.key + ' ' + depM.label)
   }
