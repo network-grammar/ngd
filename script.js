@@ -31,34 +31,51 @@ $(function () {
     url: 'data/nodes.json',
     success: (data) => {
       NGD.data.nodes = data
+      var nodes_dict = {}
       var tbody = $('#data-nodes table tbody')
       for (var i in data) {
         var item = data[i]
+        nodes_dict[item.key] = item.label
         $('<tr>')
+          .attr('id', 'node-' + item.key)
           .append($('<td>').text(item.type))
           .append($('<td>').text(item.key))
           .append($('<td>').text(item.label))
           .appendTo(tbody)
       }
-    }
-  })
 
-  // Load links
-  $.ajax({
-    url: 'data/links.json',
-    success: (data) => {
-      NGD.data.links = data
-      var tbody = $('#data-links table tbody')
-      for (var i in data) {
-        var item = data[i]
-        $('<tr>')
-          .append($('<td>').text(item.type))
-          .append($('<td>').text(item.quo.key + (item.quo.parent ? ' (P)' : '')))
-          .append($('<td>').text(item.rel.key ? item.rel.key : 'null'))
-          .append($('<td>').text(item.sic.key + (item.sic.parent ? ' (P)' : '')))
-          .append($('<td>').text(item.status))
-          .appendTo(tbody)
-      }
+      // Load links
+      $.ajax({
+        url: 'data/links.json',
+        success: (data) => {
+          NGD.data.links = data
+          var tbody = $('#data-links table tbody')
+          for (var i in data) {
+            var item = data[i]
+
+            var text = {}
+            var fields = ['quo', 'rel', 'sic']
+            for (var f in fields) {
+              var field = fields[f]
+              if (!item[field].key) {
+                text[field] = '<em>null</em>'
+                continue
+              }
+              text[field] = item[field].key
+              if (item[field].parent) text[field] += ' (P)'
+              text[field] += ' <span class="text-muted">' + nodes_dict[item[field].key] + '</span>'
+            }
+
+            $('<tr>')
+              .append($('<td>').html(item.type))
+              .append($('<td>').html(text.quo))
+              .append($('<td>').html(text.rel))
+              .append($('<td>').html(text.sic))
+              .append($('<td>').html(item.status))
+              .appendTo(tbody)
+          }
+        }
+      })
     }
   })
 
