@@ -1,17 +1,12 @@
-.PHONY: clean
+dist: dist/ngd-parser.js dist/index.html
 
-default: *.ts
-	tsc
+default: dist
 
 %.js: %.ts
 	tsc $<
 
-# clean:
-# 	# Is this dangerous?
-# 	rm -f *.js
+dist/index.html: index.pug
+	pug --pretty $< --out dist
 
-index.html: index.pug
-	pug --pretty $<
-
-ngd-parser.js: *.ts
-	tsc --outFile ngd-parser.js --module amd Parser.ts
+dist/ngd-parser.js: *.ts
+	tsc --outFile dist/ngd-parser.js --module amd Parser.ts

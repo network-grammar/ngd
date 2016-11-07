@@ -91,27 +91,55 @@ export class Parser {
     this.DB = new DataLayerSync(data)
     // NOTE: this is probably bad design
     this.provisionals = this.DB.getProvisionalLinks()
+    this.logs = {
+      'default': [],
+      'output': []
+    }
   }
 
   // Logging
-  logMessages: string[] = []
+  logs: {
+    'default': string[]
+    'output': string[]
+  }
 
   /**
    * Add message to log
    */
-  log(s: any) {
-    if (typeof s === 'string') {
-      this.logMessages.push(s)
+  log(s0: any, s1?: any) {
+    var whichLog: string
+    var logThing: any
+
+    if (typeof s0 === 'string') {
+      if (this.logs.hasOwnProperty(s0)) {
+        whichLog = s0
+        logThing = s1
+      } else {
+        whichLog = 'default'
+        logThing = s0
+      }
     } else {
-      this.logMessages.push(JSON.stringify(s, null, 2))
+      whichLog = 'default'
+      logThing = s0
     }
+
+    if (typeof logThing === 'string') {
+      this.logs[whichLog].push(logThing)
+    } else {
+      this.logs[whichLog].push(JSON.stringify(logThing, null, 2))
+    }
+
   }
 
   /**
    * Get entire log as single string
    */
-  getLog(): string {
-    return this.logMessages.join("\n")
+  getLog(whichLog?: string): string {
+    if (whichLog && this.logs.hasOwnProperty(whichLog)) {
+      return this.logs[whichLog].join("\n")
+    } else {
+      return this.logs['default'].join("\n")
+    }
   }
 
   /**
@@ -195,9 +223,10 @@ export class Parser {
     return callback(null, {
       // output: st.dlist,
       network: st.network,
-      parseState: st,
+      // parseState: st,
       provisionals: this.provisionals,
-      log: this.getLog()
+      log: this.getLog('default'),
+      output: this.getLog('output')
     })
   }
 
@@ -252,7 +281,7 @@ export class Parser {
         if (st.stack[x].flag === Flag.NotYetParticipated &&
             (st.stack[x].pos === st.left.pos || st.stack[x].pos === st.right.pos)) {
           st.stack[x].flag = Flag.DoesNotFit
-          this.log("> discarded stack entry " + x)
+          // this.log("> discarded stack entry " + x)
         }
       }
 
@@ -415,7 +444,7 @@ export class Parser {
         }
       }
 
-      this.log('Sentence is grammatical')
+      this.log('output', 'Sentence is grammatical')
 
     } else {
 
@@ -443,12 +472,12 @@ export class Parser {
         // for each of these s_seq values
         for (let pos of poss) {
           // Display a line with the p_string for s_seq followed by ‘ungrammatical: string cannot be linked’.
-          this.log('Ungrammatical: token "' + st.tokens[pos] + '" cannot be linked')
+          this.log('output', 'Ungrammatical: token "' + st.tokens[pos] + '" cannot be linked')
         }
       } else if (poss.length == 1) {
         // If there is only one orphan p_string (only one s_seq value occurs with s_flag = ‘1’)
-        this.log('Token "' + poss[0] + '" cannot be linked')
-        this.log('Trying to infer new links')
+        this.log('output', 'Token "' + poss[0] + '" cannot be linked')
+        this.log('output', 'Trying to infer new links')
         this.inferringLinks(poss[0], st)
       } else {
         // This is a HARD error
@@ -461,7 +490,7 @@ export class Parser {
    * Infer links function
    */
   inferringLinks (orphan_pos: number, st: ParseState): void {
-    this.log('> in inferringLinks')
+    // this.log('> in inferringLinks')
 
     let orphanP: PNode = this.DB.findPNode(st.tokens[orphan_pos])
     // let x_key = orphanP.key

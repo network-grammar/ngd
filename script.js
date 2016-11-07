@@ -26,9 +26,11 @@ $(function () {
   }
   NGD.vis = new vis.Network(container, {}, options)
 
+  const data_path = '../data/'
+
   // Load nodes
   $.ajax({
-    url: 'data/nodes.json',
+    url: data_path + 'nodes.json',
     success: (data) => {
       NGD.data.nodes = data
       var nodes_dict = {}
@@ -46,7 +48,7 @@ $(function () {
 
       // Load links
       $.ajax({
-        url: 'data/links.json',
+        url: data_path + 'links.json',
         success: (data) => {
           NGD.data.links = data
           var tbody = $('#data-links table tbody')
@@ -90,10 +92,13 @@ $(function () {
             .append($('<h3>').text('Error'))
             .append($('<pre>').addClass('alert-danger').text(err))
         } else {
-          for (var i in data) {
-            var out = typeof data[i] === 'string' ? data[i] : JSON.stringify(data[i], null, 2)
+          // for (var i in data) {
+          var fields = ['output', 'provisionals', 'log']
+          for (var i in fields) {
+            var field = fields[i]
+            var out = typeof data[field] === 'string' ? data[field] : JSON.stringify(data[field], null, 2)
             $('#output')
-              .append($('<h3>').text(i))
+              .append($('<h3>').text(field))
               .append($('<pre>').text(out))
           }
 
