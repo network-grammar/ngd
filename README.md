@@ -2,14 +2,22 @@
 
 [![Build Status](https://travis-ci.org/network-grammar/ngd.svg?branch=master)](https://travis-ci.org/network-grammar/ngd)
 
-First attempt at an implementation of Richard Harber's "Network Grammar" theory, as described at <http://www.languidslog.com/>.  
-This demo will only cover a small toy language, with a manually built lexicon.
+**Network Grammar** (NG) is a linguistic theory developed by Richard Harber and Michael Wilkinson, as described at <http://www.languidslog.com/>.
+
+This is a first attempt at a working implementation of a parser for NG.
+This demo covers a small toy language with a manually built lexicon.
+
+## Live demo
+
+Try out the [live demo](https://rawgit.com/network-grammar/ngd/master/dist/index.html) and experiment with the parser.
 
 ## Lexicon
 
 The lexicon is currently hardcoded in the `data` directory; see files `nodes.json` and `links.json`.
 
 ## Requirements
+
+For running locally, you will need:
 
 - Node.js
 - TypeScript & Typings: `npm install --global typescript typings`
@@ -35,8 +43,8 @@ $ node Main
 
 ### Web interface
 
-```sh
-$ make ngd-parser.js
+```shell
+$ make dist
 ```
 
-Then open `index.html` in a browser.
+Then open `dist/index.html` in a browser.
