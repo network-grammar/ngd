@@ -84,7 +84,7 @@ $(function () {
         }
         text[field] = item[field].key
         if (item[field].parent) text[field] += ' (P)'
-        text[field] += ' <span class="text-muted">' + nodes_dict[item[field].key] + '</span>'
+        text[field] += ' <small class="text-muted">' + nodes_dict[item[field].key] + '</small>'
       }
 
       $('<tr>')

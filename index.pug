@@ -78,30 +78,33 @@ html
             #output
 
           #data.tab-pane(role='tabpanel')
-            h3 Nodes
-              button#btnAddNode.btn.btn-primary Add node
-            
-            div#data-nodes
-              table.table.table-condensed.table-striped.table-hover
-                thead
-                  tr
-                    th Type
-                    th Key
-                    th Label
-                tbody
-            h3 Links
-              button#btnAddLink.btn.btn-primary Add link
-            p.text-muted (P) = parent
-            div#data-links
-              table.table.table-condensed.table-striped.table-hover
-                thead
-                  tr
-                    th Type
-                    th Quo
-                    th Rel
-                    th Sic
-                    th Status
-                tbody
+            .row
+              .col-md-4
+                h3 Nodes
+                  button#btnAddNode.btn.btn-primary Add node
+                
+                div#data-nodes
+                  table.table.table-condensed.table-striped.table-hover
+                    thead
+                      tr
+                        th Type
+                        th Key
+                        th Label
+                    tbody
+              .col-md-8
+                h3 Links  
+                  small (P) = parent
+                  button#btnAddLink.btn.btn-primary Add link
+                div#data-links
+                  table.table.table-condensed.table-striped.table-hover
+                    thead
+                      tr
+                        th Type
+                        th Quo
+                        th Rel
+                        th Sic
+                        th Status
+                    tbody
           .modal#editor-modal(role="dialog")
             .modal-dialog(role="document")
               .modal-content

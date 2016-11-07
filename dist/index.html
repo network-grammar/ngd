@@ -74,38 +74,43 @@
             <div id="output"></div>
           </div>
           <div class="tab-pane" id="data" role="tabpanel">
-            <h3>Nodes
-              <button class="btn btn-primary" id="btnAddNode">Add node</button>
-            </h3>
-            <div id="data-nodes">
-              <table class="table table-condensed table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Key</th>
-                    <th>Label</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <h3>Links
-              <button class="btn btn-primary" id="btnAddLink">Add link</button>
-            </h3>
-            <p class="text-muted">(P) = parent</p>
-            <div id="data-links">
-              <table class="table table-condensed table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Quo</th>
-                    <th>Rel</th>
-                    <th>Sic</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Nodes
+                  <button class="btn btn-primary" id="btnAddNode">Add node</button>
+                </h3>
+                <div id="data-nodes">
+                  <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Key</th>
+                        <th>Label</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <h3>Links  <small>(P) = parent</small>
+                  <button class="btn btn-primary" id="btnAddLink">Add link</button>
+                </h3>
+                <div id="data-links">
+                  <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Quo</th>
+                        <th>Rel</th>
+                        <th>Sic</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
           <div class="modal" id="editor-modal" role="dialog">
