@@ -1,4 +1,4 @@
-/* global NGD:true, $ */
+/* global NGD:true, $, vis */
 NGD = {
   data: {
     nodes: [],
@@ -22,6 +22,9 @@ $(function () {
       mass: 5,
       shape: 'dot',
       size: 20
+    },
+    interaction: {
+      zoomView: false
     }
   }
   NGD.vis = new vis.Network(container, {}, options)
@@ -31,7 +34,7 @@ $(function () {
   // Load nodes
   $.ajax({
     url: data_path + 'nodes.json',
-    success: (data) => {
+    success: function (data) {
       NGD.data.nodes = data
       var nodes_dict = {}
       var tbody = $('#data-nodes table tbody')
@@ -49,7 +52,7 @@ $(function () {
       // Load links
       $.ajax({
         url: data_path + 'links.json',
-        success: (data) => {
+        success: function (data) {
           NGD.data.links = data
           var tbody = $('#data-links table tbody')
           for (var i in data) {
@@ -82,17 +85,19 @@ $(function () {
   })
 
   require(['Parser'], function (p) {
-    $('#btnParse').click(() => {
+    $('#btnParse').click(function () {
       var input = $('#inputPhrase').val()
       var parser = new p.Parser(NGD.data)
       $('#output').html('')
-      parser.parse(input, (err, data) => {
+      NGD.vis.setData({})
+      $('#chart tbody').html('')
+      parser.parse(input, function (err, data) {
         if (err) {
           $('#output')
             .append($('<h3>').text('Error'))
             .append($('<pre>').addClass('alert-danger').text(err))
         } else {
-          // for (var i in data) {
+          // Dump parser output
           var fields = ['output', 'provisionals', 'log']
           for (var i in fields) {
             var field = fields[i]
@@ -102,17 +107,16 @@ $(function () {
               .append($('<pre>').text(out))
           }
 
-          visualise(data.network)
+          // Visualise network
+          var vis_data = data.network.toVisJS()
+          console.log(vis_data)
+          NGD.vis.setData(vis_data)
+
+          // Fill parse chart
+          $('#chart tbody').html('<tr><td colspan="13">TODO...</td></tr>')
         }
       })
       return false
     })
   })
-
-  /* global vis */
-  function visualise (network) {
-    var data = network.toVisJS()
-    console.log(data)
-    NGD.vis.setData(data)
-  }
 })
