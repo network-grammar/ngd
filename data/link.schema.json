@@ -1,0 +1,69 @@
+{
+  "title": "Link",
+  "type": "object",
+  "required": [
+    "type",
+    "quo",
+    "rel",
+    "sic",
+    "status"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "title": "Type",
+      "enum": [
+        "PCM",
+        "CRC",
+        "CCC",
+        "MRM"
+      ]
+    },
+    "quo" : {
+      "title": "QUO",
+      "type": "object",
+      "format": "grid",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rel" : {
+      "title": "REL",
+      "type": "object",
+      "format": "grid",
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      }
+    },
+    "sic" : {
+      "title": "SIC",
+      "type": "object",
+      "format": "grid",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "InUse",
+        "Deleted",
+        "ProvisionalNotUsedYet",
+        "ProvisionalJunction"
+      ]
+    }
+  }
+}

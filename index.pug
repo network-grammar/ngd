@@ -15,6 +15,8 @@ html
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js')
     script(src='ngd-parser.js')
+      
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js')
 
     style(type='text/css').
       #canvas {
@@ -29,7 +31,7 @@ html
         h1 NGD  
           small Network Grammar Demonstrator
         p.text-muted
-          em John J. Camilleri
+          em John J. Camilleri, !{date}
 
         //- Nav tabs
         ul.nav.nav-tabs(role='tablist')
@@ -77,6 +79,8 @@ html
 
           #data.tab-pane(role='tabpanel')
             h3 Nodes
+              button#btnAddNode.btn.btn-primary Add node
+            
             div#data-nodes
               table.table.table-condensed.table-striped.table-hover
                 thead
@@ -86,6 +90,8 @@ html
                     th Label
                 tbody
             h3 Links
+              button#btnAddLink.btn.btn-primary Add link
+            p.text-muted (P) = parent
             div#data-links
               table.table.table-condensed.table-striped.table-hover
                 thead
@@ -96,5 +102,14 @@ html
                     th Sic
                     th Status
                 tbody
+          .modal#editor-modal(role="dialog")
+            .modal-dialog(role="document")
+              .modal-content
+                .modal-body
+                  #editor
+                .modal-footer
+                  p.pull-left Added data will be lost when page is refreshed.
+                  button(type="button",data-dismiss="modal").btn.btn-default Close
+                  button#btnSave(type="button").btn.btn-primary Save
 
     script(type='text/javascript',src='../script.js')

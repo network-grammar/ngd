@@ -1,15 +1,21 @@
-/* global NGD:true, $, vis */
+/* global NGD:true, $, vis, JSONEditor */
 NGD = {
   data: {
     nodes: [],
     links: []
   },
-  vis: null // visualisation object
+  schemas: {
+    node: null,
+    link: null
+  },
+  vis: null, // visualisation object
+  editor: null // JSON editor
 }
 
 $(function () {
+  const data_path = '../data/'
+
   // Init vis canvas
-  var container = document.getElementById('canvas')
   var options = {
     edges: {
       smooth: {
@@ -27,62 +33,69 @@ $(function () {
       zoomView: false
     }
   }
-  NGD.vis = new vis.Network(container, {}, options)
-
-  const data_path = '../data/'
+  NGD.vis = new vis.Network(document.getElementById('canvas'), {}, options)
 
   // Load nodes
   $.ajax({
     url: data_path + 'nodes.json',
     success: function (data) {
       NGD.data.nodes = data
-      var nodes_dict = {}
-      var tbody = $('#data-nodes table tbody')
-      for (var i in data) {
-        var item = data[i]
-        nodes_dict[item.key] = item.label
-        $('<tr>')
-          .attr('id', 'node-' + item.key)
-          .append($('<td>').text(item.type))
-          .append($('<td>').text(item.key))
-          .append($('<td>').text(item.label))
-          .appendTo(tbody)
-      }
-
       // Load links
       $.ajax({
         url: data_path + 'links.json',
         success: function (data) {
           NGD.data.links = data
-          var tbody = $('#data-links table tbody')
-          for (var i in data) {
-            var item = data[i]
-
-            var text = {}
-            var fields = ['quo', 'rel', 'sic']
-            for (var f in fields) {
-              var field = fields[f]
-              if (!item[field].key) {
-                text[field] = '<em>null</em>'
-                continue
-              }
-              text[field] = item[field].key
-              if (item[field].parent) text[field] += ' (P)'
-              text[field] += ' <span class="text-muted">' + nodes_dict[item[field].key] + '</span>'
-            }
-
-            $('<tr>')
-              .append($('<td>').html(item.type))
-              .append($('<td>').html(text.quo))
-              .append($('<td>').html(text.rel))
-              .append($('<td>').html(text.sic))
-              .append($('<td>').html(item.status))
-              .appendTo(tbody)
-          }
+          drawData()
         }
       })
     }
   })
+
+  // Draw data as table
+  function drawData () {
+    // Draw nodes
+    var nodes_dict = {}
+    var tbody = $('#data-nodes table tbody')
+    tbody.html('')
+    for (var i in NGD.data.nodes) {
+      var item = NGD.data.nodes[i]
+      nodes_dict[item.key] = item.label
+      $('<tr>')
+        .attr('id', 'node-' + item.key)
+        .append($('<td>').text(item.type))
+        .append($('<td>').text(item.key))
+        .append($('<td>').text(item.label))
+        .appendTo(tbody)
+    }
+
+    // Draw links
+    tbody = $('#data-links table tbody')
+    tbody.html('')
+    for (i in NGD.data.links) {
+      item = NGD.data.links[i]
+
+      var text = {}
+      var fields = ['quo', 'rel', 'sic']
+      for (var f in fields) {
+        var field = fields[f]
+        if (!item[field].key) {
+          text[field] = '<em>null</em>'
+          continue
+        }
+        text[field] = item[field].key
+        if (item[field].parent) text[field] += ' (P)'
+        text[field] += ' <span class="text-muted">' + nodes_dict[item[field].key] + '</span>'
+      }
+
+      $('<tr>')
+        .append($('<td>').html(item.type))
+        .append($('<td>').html(text.quo))
+        .append($('<td>').html(text.rel))
+        .append($('<td>').html(text.sic))
+        .append($('<td>').html(item.status))
+        .appendTo(tbody)
+    }
+  }
 
   require(['Parser'], function (p) {
     $('#btnParse').click(function () {
@@ -118,5 +131,58 @@ $(function () {
       })
       return false
     })
+  })
+
+  // Load schemas
+  $.ajax({
+    url: data_path + 'node.schema.json',
+    success: function (data) {
+      NGD.schemas.node = data
+    }
+  })
+
+  $.ajax({
+    url: data_path + 'link.schema.json',
+    success: function (data) {
+      NGD.schemas.link = data
+    }
+  })
+
+  // Editing functionality
+  JSONEditor.defaults.options = {
+    theme: 'bootstrap3',
+    iconlib: 'bootstrap3',
+    disable_collapse: true
+  }
+  JSONEditor.defaults.options
+  $('#btnAddNode').click(function () {
+    if (NGD.editor) {
+      NGD.editor.destroy()
+    }
+    NGD.editor = new JSONEditor(document.getElementById('editor'), {
+      schema: NGD.schemas.node
+    })
+    $('#btnSave').off().click(function () {
+      NGD.data.nodes.push(NGD.editor.getValue())
+      drawData()
+      $('#editor-modal').modal('hide')
+    })
+    $('#editor-modal').modal('show')
+    return false
+  })
+  $('#btnAddLink').click(function () {
+    if (NGD.editor) {
+      NGD.editor.destroy()
+    }
+    NGD.editor = new JSONEditor(document.getElementById('editor'), {
+      schema: NGD.schemas.link
+    })
+    $('#btnSave').off().click(function () {
+      NGD.data.links.push(NGD.editor.getValue())
+      drawData()
+      $('#editor-modal').modal('hide')
+    })
+    $('#editor-modal').modal('show')
+    return false
   })
 })

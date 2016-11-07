@@ -1,0 +1,29 @@
+{
+  "title": "Node",
+  "type": "object",
+  "required": [
+    "type",
+    "key",
+    "label"
+  ],
+  "properties": {
+    "type" : {
+      "type": "string",
+      "title": "Type",
+      "enum": [
+        "P",
+        "M",
+        "C",
+        "R"
+      ]
+    },
+    "key" : {
+      "title": "Key",
+      "type": "string"
+    },
+    "label" : {
+      "title": "Label",
+      "type": "string"
+    }
+  }
+}

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
     <script src="ngd-parser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"></script>
     <style type="text/css">
       #canvas {
         width: 100%;
@@ -23,7 +24,7 @@
     <div class="container">
       <div>
         <h1>NGD  <small>Network Grammar Demonstrator</small></h1>
-        <p class="text-muted"><em>John J. Camilleri</em></p>
+        <p class="text-muted"><em>John J. Camilleri, 2016-11-07</em></p>
         <ul class="nav nav-tabs" role="tablist">
           <li class="active" role="presentation"><a href="#parse" aria-controls="parse" role="tab" data-toggle="tab">Parse</a></li>
           <li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a></li>
@@ -73,7 +74,9 @@
             <div id="output"></div>
           </div>
           <div class="tab-pane" id="data" role="tabpanel">
-            <h3>Nodes</h3>
+            <h3>Nodes
+              <button class="btn btn-primary" id="btnAddNode">Add node</button>
+            </h3>
             <div id="data-nodes">
               <table class="table table-condensed table-striped table-hover">
                 <thead>
@@ -86,7 +89,10 @@
                 <tbody></tbody>
               </table>
             </div>
-            <h3>Links</h3>
+            <h3>Links
+              <button class="btn btn-primary" id="btnAddLink">Add link</button>
+            </h3>
+            <p class="text-muted">(P) = parent</p>
             <div id="data-links">
               <table class="table table-condensed table-striped table-hover">
                 <thead>
@@ -100,6 +106,20 @@
                 </thead>
                 <tbody></tbody>
               </table>
+            </div>
+          </div>
+          <div class="modal" id="editor-modal" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <div id="editor"></div>
+                </div>
+                <div class="modal-footer">
+                  <p class="pull-left">Added data will be lost when page is refreshed.</p>
+                  <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                  <button class="btn btn-primary" id="btnSave" type="button">Save</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
