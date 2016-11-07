@@ -1,31 +1,37 @@
+mixin icon(name, text)
+  span(class="glyphicon glyphicon-"+name)
+  if (text)
+    |&nbsp;#{text}
+
 doctype html
 html
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     title NGD: Network Grammar Demonstator
 
+    script(src='https://code.jquery.com/jquery-3.1.1.min.js')
+
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',defer)
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css')
-
-    script(src='https://code.jquery.com/jquery-3.1.1.min.js')
-    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',defer)
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css')
 
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js')
+
     script(src='https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js')
     script(src='ngd-parser.js')
       
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js')
-
     style(type='text/css').
       #canvas {
         width: 100%;
         height: 500px;
         border: 1px solid #aaa;
       }
+      
   body
-
     .container
       div
         h1 NGD  
@@ -81,7 +87,10 @@ html
             .row
               .col-md-4
                 h3 Nodes
-                  button#btnAddNode.btn.btn-primary Add node
+                  button#btnAddNode.btn.btn-primary
+                    +icon('plus', 'Add node')
+                  button#btnExportNodes.btn.btn-default
+                    +icon('save', 'Export')
                 
                 div#data-nodes
                   table.table.table-condensed.table-striped.table-hover
@@ -94,7 +103,10 @@ html
               .col-md-8
                 h3 Links  
                   small (P) = parent
-                  button#btnAddLink.btn.btn-primary Add link
+                  button#btnAddLink.btn.btn-primary
+                    +icon('plus', 'Add link')
+                  button#btnExportLinks.btn.btn-default
+                    +icon('save', 'Export')
                 div#data-links
                   table.table.table-condensed.table-striped.table-hover
                     thead

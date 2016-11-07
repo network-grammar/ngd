@@ -185,4 +185,19 @@ $(function () {
     $('#editor-modal').modal('show')
     return false
   })
+
+  // Exporting functionality
+  /* global Blob, saveAs */
+  $('#btnExportNodes').click(function () {
+    var data = JSON.stringify(NGD.data.nodes, null, 2)
+    var blob = new Blob([data], {type: 'text/plain;charset=utf-8'})
+    saveAs(blob, 'nodes.json')
+    return false
+  })
+  $('#btnExportLinks').click(function () {
+    var data = JSON.stringify(NGD.data.links, null, 2)
+    var blob = new Blob([data], {type: 'text/plain;charset=utf-8'})
+    saveAs(blob, 'links.json')
+    return false
+  })
 })
