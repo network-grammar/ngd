@@ -2,8 +2,8 @@ import { PNode, MNode, CNode, RNode } from "./Node"
 import { Word, Rule, CSwitch, Delivery } from "./Link"
 import { Parser } from "./Parser"
 
-const input = "John kiss ed Lucy"
-// const input = "Nero gave Poppaea Olivia"
+// const input = "John kiss ed Lucy"
+const input = "Nero gave Poppaea Olivia"
 // const input = "Nero gave Olivia to Poppaea"
 
 let parser = new Parser({

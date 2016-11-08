@@ -262,17 +262,17 @@ export class Parser {
     // ----------------------------
 
     for (let rule of rules) {
-      st.rule = rule
 
       // r_status != W or Y
       if (rule.status !== LinkStatus.InUse && rule.status !== LinkStatus.ProvisionalNotUsedYet) {
         continue
       }
-      // r_parent == Q and s_fleft == 3
-      if (rule.isParentQuo() && st.left.flag === Flag.ActivationUsed) {
+      // r_parent == S and s_fleft == 3
+      if (rule.isParentSic() && st.left.flag === Flag.ActivationUsed) {
         continue
       }
 
+      st.rule = rule
       last_used_rule = rule
 
       // Discard any other C's for these words

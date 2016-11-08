@@ -538,7 +538,7 @@ define("DataLayerSync", ["require", "exports", "Node", "Link", "DataConverter"],
             var rules = [];
             for (var _i = 0, _a = this.links; _i < _a.length; _i++) {
                 var link = _a[_i];
-                if (link.type === Link_2.LinkType.Rule)
+                if (link.type === Link_2.LinkType.Rule) {
                     if (!quo || link.quo === quo) {
                         if (!rel || link.rel === rel) {
                             if (!sic || link.sic === sic) {
@@ -546,6 +546,7 @@ define("DataLayerSync", ["require", "exports", "Node", "Link", "DataConverter"],
                             }
                         }
                     }
+                }
             }
             return rules;
         };
@@ -825,15 +826,15 @@ define("Parser", ["require", "exports", "Link", "Network", "DataLayerSync"], fun
             // ----------------------------
             for (var _c = 0, rules_2 = rules; _c < rules_2.length; _c++) {
                 var rule = rules_2[_c];
-                st.rule = rule;
                 // r_status != W or Y
                 if (rule.status !== Link_3.LinkStatus.InUse && rule.status !== Link_3.LinkStatus.ProvisionalNotUsedYet) {
                     continue;
                 }
-                // r_parent == Q and s_fleft == 3
-                if (rule.isParentQuo() && st.left.flag === Flag.ActivationUsed) {
+                // r_parent == S and s_fleft == 3
+                if (rule.isParentSic() && st.left.flag === Flag.ActivationUsed) {
                     continue;
                 }
+                st.rule = rule;
                 last_used_rule = rule;
                 // Discard any other C's for these words
                 for (var x = st.stack.length - 1; x >= 0; x--) {

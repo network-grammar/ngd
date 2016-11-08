@@ -96,13 +96,14 @@ export class DataLayerSync {
   findRules(quo?: CNode, rel?: RNode, sic?: CNode): Rule[] {
     let rules: Rule[] = []
     for (let link of this.links) {
-      if (link.type === LinkType.Rule)
+      if (link.type === LinkType.Rule) {
         if (!quo || link.quo === quo) {
           if (!rel || link.rel === rel) {
             if (!sic || link.sic === sic) {
               rules.push(<Rule>link)
             }
           }
+        }
       }
     }
     return rules
